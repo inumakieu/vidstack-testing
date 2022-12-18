@@ -1,0 +1,25 @@
+.container {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  & .videoWrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    & AspectRatio {
+      & .videoPlayer {
+        width: 100%;
+        height: 100vh;
+        object-fit: cover;
+        object-position: center;
+      }
+    }
+  }
+}
