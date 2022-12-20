@@ -115,7 +115,7 @@ a {
 }
 
 #sourceIcon {
-  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M64 480H448c35.3 0 64-28.7 64-64V160c0-35.3-28.7-64-64-64H298.5c-17 0-33.3-6.7-45.3-18.7L226.7 50.7c-12-12-28.3-18.7-45.3-18.7H64C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64z"/></svg>');
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" height="24px" width="24px" fill="white" ><path fill="none" d="M64 480H448c35.3 0 64-28.7 64-64V160c0-35.3-28.7-64-64-64H298.5c-17 0-33.3-6.7-45.3-18.7L226.7 50.7c-12-12-28.3-18.7-45.3-18.7H64C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64z"/></svg>');
 }
 
 #fillIcon {
@@ -125,6 +125,22 @@ a {
 #configIcon {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' enable-background='new 0 0 24 24' height='24px' viewBox='0 0 24 24' width='24px' fill='%23FFFFFF'%3E%3Cg%3E%3Cpath d='M0,0h24v24H0V0z' fill='none'/%3E%3Cpath d='M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z'/%3E%3C/g%3E%3C/svg%3E");
 }
+
+
+@font-face {
+  font-family: 'Trebuchet MS';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Trebuchet MS'), url('../public/trebuc.woff') format('woff');
+  }
+  
+
+  @font-face {
+  font-family: 'Trebuchet MS Italic';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Trebuchet MS Italic'), url('../public/Trebuchet-MS-Italic.woff') format('woff');
+  }
 
 
 
@@ -153,6 +169,28 @@ vds-gesture {
   right: 0;
 }
 
+.subtitlesWrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding-bottom: 130px;
+}
+
+.subtitle {
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  font-family: "Trebuchet MS";
+  font-size: 26px;
+  padding: 4px 12px;
+  border-radius: 6px;
+}
+
 .media-overlay {
   position: absolute;
   bottom: 0;
@@ -169,30 +207,42 @@ vds-gesture {
   width: 100%;
   height: 100%;
   display: flex;
-  flex-direction: column;
-  padding: 40px;
+  padding: 24px 40px;
   font-family: 'Inter';
 }
 
+.back-button {
+  width: 26px;
+  height: 26px;
+  margin-top: 12px;
+}
+
+.title-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .anime-title {
-  color: #999999;
+  color: white;
   font-size: 20px;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .episode-title {
-  font-weight: bold;
+  font-weight: 400;
+  font-size: 16px;
+  opacity: 0.7;
 }
 
 .playWrapper {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 100%;
-  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 30px;
+  gap: 20px;
 }
 
 .media-controls {
@@ -226,6 +276,7 @@ vds-toggle-button:not([pressed]) .not-pressed {
   width: 24px;
   height: 24px;
   transition: 0.3s all ease;
+  margin-left: 22px;
 }
 
 .media-controls-buttons {
@@ -233,7 +284,6 @@ vds-toggle-button:not([pressed]) .not-pressed {
   justify-content: flex-end;
   width: calc(100% - 40px);
   margin: 0 40px;
-  gap: 22px;
 }
 
 .media-caption-button {
@@ -243,6 +293,7 @@ vds-toggle-button:not([pressed]) .not-pressed {
 .media-next-icon, .media-caption-icon {
   width: 24px;
   height: 24px;
+  margin-left: 22px;
 }
 
 .time {
@@ -263,8 +314,8 @@ vds-toggle-button:not([pressed]) .not-pressed {
 
 vds-play-button {
   position: relative;
-  width: 48px;
-  height: 48px;
+  width: 20px;
+  height: 20px;
   border-radius: 4px;
   cursor: pointer;
   color: white;
@@ -282,6 +333,17 @@ vds-play-button > svg {
   transition: opacity ease 150ms;
 }
 
+.media-play-icon, .media-pause-icon, .media-skip-icon {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  margin: 0;
+}
+
+.media-skip-icon {
+  opacity: 0.7;
+}
+
 vds-media[paused] .media-pause-icon {
   opacity: 0;
 }
@@ -297,6 +359,85 @@ vds-fullscreen-button {
   border-radius: 4px;
   cursor: pointer;
   color: white;
+  margin-left: 22px;
+}
+
+.playPauseWrapper {
+  display: flex;
+  margin-right: auto;
+  width: 600px;
+  height: 40px;
+  align-items: center;
+  gap: 32px;
+}
+
+.media-preview-container {
+  --width: 156px;
+  --width-half: calc(var(--width) / 2);
+  --top: calc(-1 * var(--width-half) - 40px);
+  --opacity-duration: 200ms;
+
+  /* clamp video to left and right of slider. */
+  --left-clamp: max(var(--width-half), var(--vds-pointer-percent));
+  --right-clamp: calc(100% - var(--width-half));
+  --left: min(var(--left-clamp), var(--right-clamp));
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  top: var(--top);
+  left: var(--left);
+  width: var(--width);
+  aspect-ratio: 16 / 9;
+  background-color: red;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity ease-out var(--opacity-duration);
+  /* re-position to center. */
+  transform: translateX(-50%);
+  will-change: left;
+  border-radius: 2px;
+}
+
+/* show preview while device pointer is inside slider. */
+vds-time-slider[pointing] .media-preview-container {
+  opacity: 1;
+  transition: opacity ease-in var(--opacity-duration);
+}
+
+/**
+ * -----------------------------------------------------------
+ * Slider Video
+ * -----------------------------------------------------------
+ */
+
+vds-slider-video {
+  background-color: #000;
+}
+
+/* Temporarily hide video while loading. */
+vds-slider-video:not([video-can-play]) {
+  opacity: 0 !important;
+}
+
+/* Hide video if it fails to load. */
+vds-slider-video[video-error] {
+  display: none;
+}
+
+/**
+ * -----------------------------------------------------------
+ * Slider Preview Time
+ * -----------------------------------------------------------
+ */
+
+vds-slider-value-text {
+  margin-top: 8px;
+  font-size: 12px;
+  padding: 0 8px;
+  color: hsl(0, 0%, 70%);
+  background-color: black;
 }
 
 vds-fullscreen-button > svg {
@@ -429,8 +570,8 @@ vds-time-slider:not(:hover) {
 }
 
 .slider-track, .slider-times {
-  background-color: #BEBEBE;
-  opacity: 0.66;
+  background-color: #A0A0A0;
+  opacity: 1;
   width: 100%;
   height: var(--track-height);
   position: absolute;
@@ -460,7 +601,7 @@ vds-time-slider:not(:hover) {
 }
 
 .slider-track.fill {
-  background-color: white;
+  background-color: #F47521;
   transform-origin: left center;
   transform: translateY(-50%) scaleX(var(--vds-fill-rate));
   will-change: transform;
