@@ -3,494 +3,536 @@
 import { useEffect, useState, useRef } from "react";
 import styles from "../styles/SettingsPanel.module.scss";
 
-export function SettingsPanel(props) {
+export function SettingsPanel(props: any) {
   const menuCon = useRef(null);
   const [DMenu, setDMenu] = useState<any>();
 
-  function createElement(x: any) {
+  function createElement(config) {
     let temp;
-    if ("element" in x) {
-      temp = document.createElement(x.element);
-    } else {
-      temp = document.createElement("div");
+    if ("element" in config) {
+        temp = document.createElement(config.element);
     }
-    let attributes = x.attributes;
-
+    else {
+        temp = document.createElement("div");
+    }
+    let attributes = config.attributes;
     for (let value in attributes) {
-      temp.setAttribute(value, attributes[value]);
+        temp.setAttribute(value, attributes[value]);
     }
-
-    for (let value in x.style) {
-      temp.style[value] = x.style[value];
+    for (let value in config.style) {
+        temp.style[value] = config.style[value];
     }
-
-    if ("id" in x) {
-      temp.id = x.id;
+    if ("id" in config) {
+        temp.id = config.id;
     }
-
-    if ("className" in x) {
-      temp.className = x.className;
+    if ("class" in config) {
+        temp.className = config.class;
     }
-
-    if ("innerText" in x) {
-      temp.textContent = x.innerText;
+    if ("innerText" in config) {
+        temp.textContent = config.innerText;
     }
-
-    if ("innerHTML" in x) {
-      temp.innerHTML = x.innerHTML;
+    if ("innerHTML" in config) {
+        temp.innerHTML = config.innerHTML;
     }
-
-    let listeners = x.listeners;
-
+    let listeners = config.listeners;
     for (let value in listeners) {
-      temp.addEventListener(value, listeners[value]);
+        temp.addEventListener(value, function () {
+            listeners[value].bind(this)();
+        });
     }
-
     return temp;
-  }
-
-  class Toggle {
-    element: any;
-    constructor(element: any) {
-      this.element = element;
+}
+/**
+ * A toggle class
+ */
+class Toggle {
+    constructor(element) {
+        this.element = element;
     }
-
+    /**
+     * Turns the toggle on if it isn't already on
+     */
     turnOn() {
-      if (!this.isOn()) {
-        this.element.click();
-      }
+        if (!this.isOn()) {
+            this.element.click();
+        }
     }
-
+    /**
+     * Turns the toggle off if it isn't already off
+     */
     turnOff() {
-      if (this.isOn()) {
-        this.element.click();
-      }
+        if (this.isOn()) {
+            this.element.click();
+        }
     }
-
+    /**
+     * Checks if the toggle is on
+     * @returns true if the toggle is on. false otherwise
+     */
     isOn() {
-      return this.element.classList.contains(`${styles.active}`);
+        return this.element.classList.contains("active");
     }
-
+    /**
+     * Toggles the toggle
+     */
     toggle() {
-      if (this.isOn()) {
-        this.turnOff();
-      } else {
-        this.turnOn();
-      }
+        if (this.isOn()) {
+            this.turnOff();
+        }
+        else {
+            this.turnOn();
+        }
     }
-  }
-
-  class Selectables {
-    element: any;
-    constructor(element: any) {
-      this.element = element;
+}
+class Selectables {
+    constructor(element, DDMinstance, sceneID, sceneElem) {
+        this.element = element;
+        this.DDMinstance = DDMinstance;
+        this.sceneID = sceneID;
+        this.sceneElem = sceneElem;
     }
-
     select() {
-      this.element.click();
+        Selectables.selectWithoutCallback(this.element, this.DDMinstance, this.sceneID, this.sceneElem);
     }
-  }
-
-  class Scene {
-    data: any;
-    DDMinstance: any;
-    element: any;
-    constructor(config: any, dropDownMenuInstance: any) {
-      this.data = config;
-      this.DDMinstance = dropDownMenuInstance;
+    selectWithCallback() {
+        this.element.click();
     }
-
-    addItem(config: any, isHeading = false) {
-      this.element
-        .querySelector(`.${styles.scene}`)
-        .append(this.DDMinstance.makeItem(config, isHeading, this.data.id));
-
-      if (this.element.classList.contains(`${styles.active}`)) {
-        this.DDMinstance.menuCon.style.height =
-          this.element.querySelector(`.${styles.scene}`).offsetHeight + "px";
-      }
-    }
-
-    delete() {
-      this.deleteItems();
-      this.data = null;
-      this.DDMinstance = null;
-      this.element.remove();
-    }
-
-    deleteItems() {
-      this.element.querySelector(`.${styles.scene}`).innerHTML = "";
-
-      if (this.data.id in this.DDMinstance.selectedValues) {
-        this.DDMinstance.selectedValues[this.data.id] = "";
-      }
-
-      this.DDMinstance.updateSelectVals(this.data.id);
-      this.DDMinstance.deleteSceneFromHistory(this.data.id);
-
-      for (let item of this.data.items) {
-        this.DDMinstance.deleteItem(item);
-      }
-      this.data.items = [];
-    }
-  }
-
-  class dropDownMenu {
-    scenes: any[];
-    menuCon: any;
-    history: any[];
-    toggles: any[];
-    selections: any[];
-    selectedValues: any[];
-    selectedValuesDOM: any[];
-    constructor(scenes: any, menuCon: any) {
-      this.scenes = [];
-      this.menuCon = menuCon;
-      this.history = [];
-      this.toggles = [];
-      this.selections = [];
-      this.selectedValues = [];
-      this.selectedValuesDOM = [];
-      for (let scene of scenes) {
-        this.scenes[scene.id] = new Scene(scene, this);
-      }
-
-      for (let scene of scenes) {
-        if (!this.scenes[scene.id].element) {
-          this.makeScene(scene);
-        }
-      }
-
-      menuCon.onscroll = function () {
-        menuCon.scrollLeft = 0;
-      };
-    }
-
-    open(id: string) {
-      if (id in this.scenes) {
-        if (
-          !this.history.length ||
-          (this.history.length && this.history[this.history.length - 1] != id)
-        ) {
-          this.history.push(id);
-        }
-
-        for (let sceneID in this.scenes) {
-          if (sceneID === id) {
-            console.log(sceneID);
-            this.scenes[sceneID].element.classList.add(`${styles.active}`);
-            console.log(this.scenes[sceneID].element);
-            this.menuCon.style.height =
-              this.scenes[sceneID].element.querySelector(`.${styles.scene}`)
-                .offsetHeight + "px";
-          } else {
-            this.scenes[sceneID].element.classList.remove(`${styles.active}`);
-          }
-        }
-      }
-    }
-
-    back() {
-      if (this.history.length > 1) {
-        let lastHistory = this.history.pop();
-        this.open(this.history.pop());
-      } else {
-        this.closeMenu();
-      }
-    }
-
-    openMenu() {
-      this.menuCon.style.display = "block";
-    }
-
-    closeMenu() {
-      this.menuCon.style.display = "none";
-    }
-
-    makeItem(item: any, isHeading = false, sceneID: any) {
-      item.selectedValue = this.selectedValues[item.open];
-
-      let menuItem = createElement({
-        className: isHeading ? `${styles.menuHeading}` : `${styles.menuItem}`,
-        attributes: item.attributes ? item.attributes : {},
-      });
-
-      if (!isHeading && "iconID" in item) {
-        let menuItemIcon = createElement({
-          className: `${styles.menuItemIcon}`,
-          id: item.iconID,
-        });
-
-        menuItem.append(menuItemIcon);
-      }
-
-      if (item.open) {
-        menuItem.addEventListener("click", () => {
-          this.open(item.open);
-        });
-      }
-
-      if (isHeading && item.hideArrow !== true) {
-        let menuItemIcon = createElement({
-          className: `${styles.menuItemIcon} ${styles.menuItemIconBack}`,
-        });
-
-        menuItem.addEventListener("click", () => {
-          this.back();
-        });
-
-        menuItem.append(menuItemIcon);
-      }
-
-      let self = this;
-
-      if (item.callback) {
-        menuItem.addEventListener("click", () => {
-          item.callback.bind(menuItem)();
-        });
-      }
-
-      if (item.selected) {
-        menuItem.classList.add(`${styles.selected}`);
-        if (sceneID) {
-          this.selectedValues[sceneID] = item.text;
-          this.updateSelectVals(sceneID);
-        }
-      }
-
-      if (item.highlightable) {
-        if (item.id) {
-          this.selections[item.id] = new Selectables(menuItem);
-        }
-
-        menuItem.setAttribute("highlightable", "true");
-        menuItem.addEventListener("click", function () {
-          let siblings = menuItem.parentElement.children;
-
-          for (let child of siblings) {
+    static selectWithoutCallback(element, DDMinstance, sceneID, sceneElem) {
+        let parentElement = element.parentElement ? element.parentElement : sceneElem;
+        let siblings = parentElement.children;
+        for (let i = 0; i < siblings.length; i++) {
+            let child = siblings[i];
             if (child.getAttribute("highlightable") === "true") {
-              child.classList.remove(`${styles.selected}`);
+                child.classList.remove("selected");
             }
-          }
-
-          menuItem.classList.add(`${styles.selected}`);
-
-          if (sceneID) {
-            self.selectedValues[sceneID] = menuItem.innerText;
-            self.updateSelectVals(sceneID);
-          }
-        });
-      }
-
-      let menuItemText = createElement({
-        className: `${styles.menuItemText}`,
-        innerText: item.text,
-      });
-
-      menuItem.append(menuItemText);
-
-      if (item.textBox) {
-        let textBox = createElement({
-          element: "input",
-          className: `${styles.textBox}`,
-          attributes: {
-            type: "text",
-          },
-        });
-
-        if (item.value) {
-          textBox.value = item.value;
         }
-        textBox.addEventListener("input", item.onInput);
-
-        // if(item.id){
-        //     this.toggles[item.id] = new Toggle(toggle);
-        // }
-        menuItem.append(textBox);
-      }
-
-      if (true) {
-        // menuItem.classList.add("menuItemToggle");
-
-        let valueDOM = createElement({
-          innerText: item.selectedValue,
-          className: `${styles.menuItemValue}`,
-        });
-        menuItem.append(valueDOM);
-
-        item.valueDOM = valueDOM;
-        if (!this.selectedValuesDOM[item.open]) {
-          this.selectedValuesDOM[item.open] = {};
+        element.classList.add("selected");
+        if (sceneID) {
+            let selectedValue = element.getAttribute("data-alttext");
+            DDMinstance.selectedValues[sceneID] = selectedValue ? selectedValue : element.innerText;
+            DDMinstance.updateSelectVals(sceneID);
         }
-
-        let sValue = this.selectedValuesDOM[item.open];
-
-        if (sValue.elements) {
-          sValue.elements.push(valueDOM);
-        } else {
-          sValue.elements = [valueDOM];
-        }
-      }
-
-      if (item.open) {
-        menuItem.append(
-          createElement({
-            className: `${styles.menuItemIcon} ${styles.menuItemIconSub}`,
-            style: {
-              marginLeft: item.selectedValue ? "3px" : "auto",
-            },
-          })
-        );
-      }
-      if (item.toggle) {
-        menuItem.classList.add(`${styles.menuItemToggle}`);
-        let toggle = createElement({
-          className: `${styles.toggle}`,
-          listeners: {
-            click: function () {
-              this.classList.toggle(`${styles.active}`);
-              if (this.classList.contains(`${styles.active}`)) {
-                item.toggleOn();
-              } else {
-                item.toggleOff();
-              }
-            },
-          },
-        });
-
-        if (item.id) {
-          this.toggles[item.id] = new Toggle(toggle);
-        }
-        menuItem.append(toggle);
-      }
-
-      return menuItem;
     }
-
-    updateSelectVals(sceneID: any) {
-      if (this.selectedValuesDOM[sceneID]) {
-        for (let elems of this.selectedValuesDOM[sceneID].elements) {
-          elems.innerText = this.selectedValues[sceneID];
-        }
-      }
+}
+class Scene {
+    /**
+     *
+     * @param {menuSceneConfig} config the config that builds the scene
+     * @param {dropDownMenu} dropDownMenuInstance The drop down menu that the scene is a part of
+     *
+     */
+    constructor(config, dropDownMenuInstance) {
+        this.data = config;
+        this.DDMinstance = dropDownMenuInstance;
     }
-    makeScene(config: any) {
-      let scene = createElement({
-        className: `${styles.scene}`,
-      });
-
-      let sceneCon = createElement({
-        className: `${styles.sceneCon}`,
-      });
-
-      let openScene = this.scenes[config.id];
-      if (openScene.element) {
-        return;
-      }
-
-      if (config.heading) {
-        scene.append(this.makeItem(config.heading, true, config.id));
-      }
-      for (let item of config.items) {
+    addItem(config, isHeading = false) {
+        var _a, _b;
+        if (!this.DDMinstance)
+            return;
+        if (!this.data)
+            return;
+        let sceneElem = this.element.querySelector(".scene");
+        if (sceneElem) {
+            let item = this.DDMinstance.makeItem(config, isHeading, this.data.id, sceneElem);
+            if (config.selected && config.triggerCallbackIfSelected === true) {
+                item.click();
+            }
+            sceneElem.append(item);
+        }
+        if (this.element.classList.contains("active")) {
+            this.DDMinstance.menuCon.style.height = ((_b = (_a = this.element.querySelector(".scene")) === null || _a === void 0 ? void 0 : _a.offsetHeight) !== null && _b !== void 0 ? _b : 100) + "px";
+        }
+    }
+    delete() {
+        this.deleteItems();
+        delete this.DDMinstance.scenes[this.data.id];
+        this.data = undefined;
+        this.DDMinstance = undefined;
+        this.element.remove();
+    }
+    deleteItems() {
+        if (!this.DDMinstance)
+            return;
+        if (!this.data)
+            return;
+        let sceneDOM = this.element.querySelector(".scene");
+        if (sceneDOM) {
+            sceneDOM.innerHTML = "";
+        }
+        if (this.data.id in this.DDMinstance.selectedValues) {
+            this.DDMinstance.selectedValues[this.data.id] = "";
+        }
+        this.DDMinstance.updateSelectVals(this.data.id);
+        this.DDMinstance.deleteSceneFromHistory(this.data.id);
+        for (const item of this.data.items) {
+            this.DDMinstance.deleteItem(item);
+        }
+        this.data.items = [];
+    }
+}
+class dropDownMenu {
+    constructor(scenes, menuCon) {
+        this.scenes = {};
+        this.menuCon = menuCon;
+        this.history = [];
+        this.toggles = {};
+        this.selections = {};
+        this.selectedValues = {};
+        this.selectedValuesDOM = {};
+        for (const scene of scenes) {
+            this.scenes[scene.id] = new Scene(scene, this);
+        }
+        for (const scene of scenes) {
+            if (!this.scenes[scene.id].element) {
+                this.makeScene(scene);
+            }
+        }
+        menuCon.onscroll = function () {
+            menuCon.scrollLeft = 0;
+        };
+    }
+    /**
+     * Opens a scene
+     * @param {string} id the sceneID
+     */
+    open(id) {
+        if (id && id in this.scenes) {
+            if (!this.history.length || (this.history.length && this.history[this.history.length - 1] != id)) {
+                this.history.push(id);
+            }
+            for (const sceneID in this.scenes) {
+                if (sceneID === id) {
+                    this.scenes[sceneID].element.classList.add("active");
+                    this.menuCon.style.height = this.scenes[sceneID].element.querySelector(".scene").offsetHeight + "px";
+                }
+                else {
+                    this.scenes[sceneID].element.classList.remove("active");
+                }
+            }
+        }
+    }
+    /**
+     * Goes back to the the last-opened scene
+     * Closes the menu if it can't go back
+     */
+    back() {
+        if (this.history.length > 1) {
+            let lastHistory = this.history.pop();
+            this.open(this.history.pop());
+        }
+        else {
+            this.closeMenu();
+        }
+    }
+    /**
+     * Opens the menu
+     */
+    openMenu() {
+        this.menuCon.style.display = "block";
+    }
+    /**
+     * Closes the menu
+     */
+    closeMenu() {
+        this.menuCon.style.display = "none";
+    }
+    /**
+     *
+     * @param {menuItemConfig} itemConfig the config object used to build the menuItem
+     * @param {boolean} isHeading if the item is a heading or now
+     * @param {string} sceneID the sceneID of the scene of which this menuItem is a part of
+     * @returns {HTMLElement}
+     */
+    makeItem(itemConfig, isHeading, sceneID, sceneElem) {
+        let item = itemConfig;
+        let shouldShowValue = false;
         if (item.open) {
-          let openScene = this.scenes[item.open];
-          if (!openScene.element && openScene.data.selectableScene) {
-            this.makeScene(this.scenes[item.open].data);
-          }
+            item.selectedValue = this.selectedValues[item.open];
+            if (this.scenes[item.open] instanceof Scene) {
+                shouldShowValue = this.scenes[item.open].data.selectableScene === true;
+            }
         }
-
-        scene.append(this.makeItem(item, false, config.id));
-      }
-
-      sceneCon.append(scene);
-      this.scenes[config.id].element = sceneCon;
-      this.menuCon.append(sceneCon);
-
-      return sceneCon;
-    }
-
-    addScene(config: any) {
-      let sceneDIV = this.makeScene(config);
-      this.menuCon.append(sceneDIV);
-      config.element = sceneDIV;
-      this.scenes[config.id] = config;
-    }
-
-    deleteScene(id: any) {
-      if (id in this.scenes) {
-        this.scenes[id].delete();
-        delete this.scenes[id];
-      }
-    }
-
-    deleteItem(item: any) {
-      if (item.id in this.selections) {
-        delete this.selections[item.id];
-      }
-
-      if (item.id in this.toggles) {
-        delete this.toggles[item.id];
-      }
-
-      if (item.open) {
-        let elem = this.selectedValuesDOM[item.open];
-        if (elem) {
-          let elements = elem.elements;
-          let idx = elements.indexOf(item.valueDOM);
-          if (idx > -1) {
-            elements.splice(idx, 1);
-          }
+        const tempConfig = {
+            "class": "menuItemText",
+        };
+        if (item.html) {
+            tempConfig.innerHTML = item.html;
         }
-      }
-    }
-
-    deleteSceneFromHistory(val: any) {
-      for (var i = this.history.length - 1; i >= 0; i--) {
-        if (this.history[i] == val) {
-          this.history.splice(i, 1);
+        else {
+            tempConfig.innerText = item.text;
         }
-      }
+        if (item.altText) {
+            tempConfig.attributes = {
+                "data-alttext": item.altText
+            };
+        }
+        const menuConfig = {
+            "class": isHeading ? "menuHeading" : "menuItem",
+        };
+        if (item.attributes) {
+            menuConfig.attributes = item.attributes;
+        }
+        const menuItem = createElement(menuConfig);
+        const menuItemText = createElement(tempConfig);
+        if (item.altText) {
+            menuItem.setAttribute("data-alttext", item.altText);
+        }
+        if (!isHeading && "iconID" in item) {
+            const menuItemIcon = createElement({
+                "class": "menuItemIcon",
+                "id": item.iconID
+            });
+            menuItem.append(menuItemIcon);
+        }
+        if (item.open) {
+            menuItem.addEventListener("click", () => {
+                this.open(item.open);
+            });
+        }
+        if (isHeading && item.hideArrow !== true) {
+            const menuItemIcon = createElement({
+                "class": "menuItemIcon menuItemIconBack",
+            });
+            menuItem.addEventListener("click", () => {
+                this.back();
+            });
+            menuItem.append(menuItemIcon);
+        }
+        if (item.callback) {
+            menuItem.addEventListener("click", () => {
+                var _a;
+                (_a = item.callback) === null || _a === void 0 ? void 0 : _a.bind(menuItem)();
+            });
+        }
+        // Should be before selectWithoutCallback is called to make sure
+        // .innerText is not an empty string
+        menuItem.append(menuItemText);
+        if (item.selected) {
+            if (sceneID) {
+                Selectables.selectWithoutCallback(menuItem, this, sceneID, sceneElem);
+                this.updateSelectVals(sceneID);
+            }
+        }
+        if (item.highlightable) {
+            if (item.id) {
+                this.selections[item.id] = new Selectables(menuItem, this, sceneID, sceneElem);
+            }
+            menuItem.setAttribute("highlightable", "true");
+            menuItem.addEventListener("click", () => {
+                Selectables.selectWithoutCallback(menuItem, this, sceneID, sceneElem);
+            });
+        }
+        if (item.textBox) {
+            const textBox = createElement({
+                "element": "input",
+                "class": "textBox",
+                "attributes": {
+                    "type": "text"
+                }
+            });
+            if (item.value) {
+                textBox.value = item.value;
+            }
+            textBox.addEventListener("input", function (event) {
+                if (item.onInput) {
+                    item.onInput(event);
+                }
+            });
+            menuItem.append(textBox);
+        }
+        if (shouldShowValue) {
+            const valueDOM = createElement({
+                "innerText": item.selectedValue,
+                "class": "menuItemValue"
+            });
+            menuItem.append(valueDOM);
+            item.valueDOM = valueDOM;
+            if (item.open) {
+                if (!this.selectedValuesDOM[item.open]) {
+                    this.selectedValuesDOM[item.open] = {};
+                }
+                const sValue = this.selectedValuesDOM[item.open];
+                if (sValue.elements) {
+                    sValue.elements.push(valueDOM);
+                }
+                else {
+                    sValue.elements = [valueDOM];
+                }
+            }
+        }
+        if (item.open) {
+            menuItem.append(createElement({
+                "class": "menuItemIcon menuItemIconSub",
+                "style": {
+                    "marginLeft": item.selectedValue ? "3px" : "auto"
+                }
+            }));
+        }
+        if (item.toggle) {
+            menuItem.classList.add("menuItemToggle");
+            let toggle = createElement({
+                "class": `toggle ${item.on ? " active" : ""}`,
+                "listeners": {
+                    "click": function () {
+                        this.classList.toggle("active");
+                        if (this.classList.contains("active")) {
+                            item.toggleOn ? item.toggleOn() : "";
+                        }
+                        else {
+                            item.toggleOff ? item.toggleOff() : "";
+                        }
+                    }
+                }
+            });
+            if (item.id) {
+                this.toggles[item.id] = new Toggle(toggle);
+            }
+            menuItem.append(toggle);
+        }
+        return menuItem;
     }
-
-    getToggle(id: any) {
-      if (id in this.toggles) {
-        return this.toggles[id];
-      }
-
-      return null;
+    /**
+     * Updates all menuItems that point to the scene with a particular sceneID
+     * @param {string} sceneID the sceneID of the scene whose selected values will be updated
+     */
+    updateSelectVals(sceneID) {
+        if (this.selectedValuesDOM[sceneID]) {
+            for (const elems of this.selectedValuesDOM[sceneID].elements) {
+                elems.innerText = this.selectedValues[sceneID];
+            }
+        }
     }
-
-    getScene(id: any) {
-      if (id in this.scenes) {
-        return this.scenes[id];
-      }
-
-      return null;
+    makeScene(config) {
+        const scene = createElement({
+            "class": "scene"
+        });
+        const sceneCon = createElement({
+            "class": "sceneCon"
+        });
+        const openScene = this.scenes[config.id];
+        if (openScene === null || openScene === void 0 ? void 0 : openScene.element) {
+            return;
+        }
+        if (config.heading) {
+            scene.append(this.makeItem(config.heading, true, config.id, scene));
+        }
+        for (const item of config.items) {
+            let newItemConfig = item;
+            if (item.open) {
+                const openScene = this.scenes[item.open];
+                if (!openScene.element && openScene.data.selectableScene) {
+                    this.makeScene(this.scenes[item.open].data);
+                }
+            }
+            scene.append(this.makeItem(newItemConfig, false, config.id, scene));
+        }
+        sceneCon.append(scene);
+        this.scenes[config.id].element = sceneCon;
+        this.menuCon.append(sceneCon);
+        return sceneCon;
     }
-  }
+    addScene(config) {
+        this.scenes[config.id] = new Scene(config, this);
+        const sceneDIV = this.makeScene(config);
+        if (sceneDIV) {
+            this.menuCon.append(sceneDIV);
+            config.element = sceneDIV;
+        }
+    }
+    deleteScene(id) {
+        if (id in this.scenes) {
+            this.scenes[id].delete();
+            delete this.scenes[id];
+        }
+    }
+    deleteItem(item) {
+        if (item.id && item.id in this.selections) {
+            delete this.selections[item.id];
+        }
+        if (item.id && item.id in this.toggles) {
+            delete this.toggles[item.id];
+        }
+        if (item.open) {
+            const elem = this.selectedValuesDOM[item.open];
+            if (elem) {
+                const elements = elem.elements;
+                let idx = elements.indexOf(item.valueDOM);
+                if (idx > -1) {
+                    elements.splice(idx, 1);
+                }
+            }
+        }
+    }
+    deleteSceneFromHistory(val) {
+        for (let i = this.history.length - 1; i >= 0; i--) {
+            if (this.history[i] == val) {
+                this.history.splice(i, 1);
+            }
+        }
+    }
+    /**
+     *
+     * @param {string} id the id of the toggle
+     * @returns {Toggle | null}
+     */
+    getToggle(id) {
+        if (id in this.toggles) {
+            return this.toggles[id];
+        }
+        return null;
+    }
+    /**
+     *
+     * @param {string} id the id of the scene
+     * @returns {Scene | null}
+     */
+    getScene(id) {
+        if (id in this.scenes) {
+            return this.scenes[id];
+        }
+        return null;
+    }
+}
 
   useEffect(() => {
     console.log("SettingsMenu");
     console.log(menuCon.current);
+    let subs = []
+
+    subs.push({
+      text: "Styling",
+      iconID: "fillIcon",
+      open: "subStyle",
+    })
+
+    const languageNames = new Intl.DisplayNames(['en'], {
+      type: 'language'
+    });
+
+    props.subtitles.map((ep: any, index: number) => {
+      subs.push( {
+        text: languageNames.of(ep.lang.split('-')[0]),
+        callback: () => console.log(ep.lang),
+        highlightable: true,
+        selected: ep.lang == "en-US" ? true : false,
+      })
+    })
+
+
     let tempData = new dropDownMenu(
       [
         {
           id: "initial",
-          heading: {
-            text: "Settings",
-            hideArrow: true,
-          },
           items: [
             {
               text: "Quality",
               iconID: "qualIcon",
               open: "quality",
             },
-
             {
-              text: "Sources",
+              text: "Subtitles",
               iconID: "sourceIcon",
-              open: "source",
+              open: "subtitle",
             },
             {
               text: "Fill Mode",
@@ -512,33 +554,77 @@ export function SettingsPanel(props) {
           },
           items: props.sources.map((ep: any) => {
             return {
-              text: ep.quality,
-              callback: () => console.log("1080p!"),
+              html: `<div class="qualityItem"><h4 class="qualityText">${ep.quality}</h4><h4 class="hdText">${ep.quality == "1080p" ? "HD": ep.quality == "720p" ? "SD" : ""}</h4></div>`,
+              altText:ep.quality,
+              callback: () => console.log(ep.quality),
               highlightable: true,
               selected: ep.quality == "1080p" ? true : false,
             };
           }),
         },
-
         {
-          id: "source",
+          id: "subtitle",
           selectableScene: true,
           heading: {
-            text: "Sources",
+            text: "Subtitles",
+          },
+          items: subs,
+        },
+        {
+          id: "subStyle",
+          selectableScene: true,
+          heading: {
+            text: "Sub Styling",
           },
           items: [
             {
-              text: "HLS#sub",
-              highlightable: true,
-              selected: true,
+              text: "Disable Subs",
+              toggle: true,
+              toggleOn: () => console.log("Toggle on"),
+              toggleOff: () => console.log("Toggle off"),
             },
             {
-              text: "HLS#dub",
-              highlightable: true,
+              text: "Font Color",
+              textBox: true,
+              value: "#000000",
+              onInput: function (value) {
+                console.log(value.target.value);
+              },
             },
-          ],
+            {
+              text: "Font Opacity",
+              textBox: true,
+              value: "0.7",
+              onInput: function (value) {
+                console.log(value.target.value);
+              },
+            },
+            {
+              text: "Background Color",
+              textBox: true,
+              value: "#000000",
+              onInput: function (value) {
+                console.log(value.target.value);
+              },
+            },
+            {
+              text: "Background Opacity",
+              textBox: true,
+              value: "0.7",
+              onInput: function (value) {
+                console.log(value.target.value);
+              },
+            },
+            {
+              text: "Font Size",
+              textBox: true,
+              value: "24",
+              onInput: function (value) {
+                console.log(value.target.value);
+              },
+            },
+          ]
         },
-
         {
           id: "fillmode",
           heading: {
@@ -573,49 +659,24 @@ export function SettingsPanel(props) {
             back: true,
           },
           items: [
+
             {
-              text: "Fill Mode",
-              iconID: "fillIcon",
-              open: "fillmode",
-            },
-            {
-              text: "Autoplay",
+              html: '<h3 class="qualityText">Autoplay</h3>',
               toggle: true,
               toggleOn: () => console.log("Toggle on"),
               toggleOff: () => console.log("Toggle off"),
             },
             {
-              text: "Rewatch Mode",
+              html: '<h3 class="qualityText">Hide Skip Intro</h3>',
               toggle: true,
               toggleOn: () => console.log("Toggle on"),
               toggleOff: () => console.log("Toggle off"),
             },
             {
-              text: "Hide Skip Intro",
+              html: '<h3 class="qualityText">Auto Skip Intro</h3>',
               toggle: true,
               toggleOn: () => console.log("Toggle on"),
               toggleOff: () => console.log("Toggle off"),
-            },
-            {
-              text: "Automatically Skip Intro",
-              toggle: true,
-              toggleOn: () => console.log("Toggle on"),
-              toggleOff: () => console.log("Toggle off"),
-            },
-            {
-              text: "Double Tap Time",
-              textBox: true,
-              onInput: function (value) {
-                console.log(value.target.value);
-              },
-            },
-            {
-              text: "Skip Tutton Time",
-              textBox: true,
-              value: "hi",
-              onInput: function (value) {
-                console.log(value.target.value);
-              },
             },
           ],
         },
