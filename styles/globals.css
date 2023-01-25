@@ -1039,6 +1039,17 @@ vds-fullscreen-button {
 
 .videoTimeSlider {
     transition: 0.3s all ease;
+    width: 100%;
+    --media-slider-height: 48px;
+  --media-slider-thumb-size: 14px;
+  --media-slider-focused-thumb-size: calc(var(--thumb-size) * 1.1);
+  --media-slider-track-height: 4px;
+  --media-slider-focused-track-height: calc(var(--track-height) * 1.25);
+}
+
+.mobileControlsAboveProgress {
+    display: none;
+    transition: 0.3s all ease;
 }
 
 @media only screen and (max-width: 600px) {
@@ -1094,7 +1105,7 @@ vds-fullscreen-button {
         transition: 0.3s all ease;
         background: rgba(0, 0, 0, 0.5);
     }
-    
+
     .mobilePlayControls.opened {
         display: flex;
     }

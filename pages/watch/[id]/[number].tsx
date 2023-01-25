@@ -25,7 +25,6 @@ import "vidstack/styles/base.css";
 // the following styles are optional - remove to go headless.
 import "vidstack/styles/ui/buttons.css";
 import "vidstack/styles/ui/sliders.css";
-import Link from "next/link";
 
 export default function Home(props) {
     return (
