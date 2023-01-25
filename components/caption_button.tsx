@@ -1,35 +1,63 @@
-import { ToggleButton } from "@vidstack/player-react";
+//import { ToggleButton } from "@vidstack/react";
 import { useState } from "react";
 
 export function CaptionButton() {
     const [open, setOpen] = useState(true);
 
     return (
-        <ToggleButton
+        <div
             aria-label="Settings"
             onClick={() => {
                 open ? setOpen(false) : setOpen(true);
             }}
             className="media-caption-button"
         >
-            <span className="material-symbols-outlined media-caption-icon"
-                style={{
-                    display: open ? "block" : "none",
-                    transition: "0.3s all ease",
-                }}>
-closed_caption
-</span>
             <svg
                 className="media-caption-icon"
+                width="32"
+                height="23"
+                viewBox="0 0 32 23"
+                fill="none"
                 xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 576 512"
                 style={{
                     display: open ? "none" : "block",
                     transition: "0.3s all ease",
                 }}
             >
-                <path fill="white" d="M512 32H64C28.65 32 0 60.65 0 96v320c0 35.35 28.65 64 64 64h448c35.35 0 64-28.65 64-64V96C576 60.65 547.3 32 512 32zM528 416c0 8.822-7.178 16-16 16H64c-8.822 0-16-7.178-16-16V96c0-8.822 7.178-16 16-16h448c8.822 0 16 7.178 16 16V416zM236.5 222.1c9.375 9.375 24.56 9.375 33.94 0c9.375-9.375 9.375-24.56 0-33.94c-37.44-37.44-98.31-37.44-135.7 0C116.5 206.2 106.5 230.4 106.5 256s9.1 49.75 28.12 67.88c18.72 18.72 43.28 28.08 67.87 28.08s49.16-9.359 67.87-28.08c9.375-9.375 9.375-24.56 0-33.94c-9.375-9.375-24.56-9.375-33.94 0c-18.69 18.72-49.19 18.72-67.87 0C159.5 280.9 154.5 268.8 154.5 256s5-24.88 14.06-33.94C187.3 203.3 217.8 203.3 236.5 222.1zM428.5 222.1c9.375 9.375 24.56 9.375 33.94 0c9.375-9.375 9.375-24.56 0-33.94c-37.44-37.44-98.31-37.44-135.7 0C308.5 206.2 298.5 230.4 298.5 256s9.1 49.75 28.12 67.88c18.72 18.72 43.28 28.08 67.87 28.08s49.16-9.359 67.87-28.08c9.375-9.375 9.375-24.56 0-33.94c-9.375-9.375-24.56-9.375-33.94 0c-18.69 18.72-49.19 18.72-67.87 0C351.5 280.9 346.5 268.8 346.5 256s5-24.88 14.06-33.94C379.3 203.3 409.8 203.3 428.5 222.1z" />
+                <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M0 2C0 0.89543 0.895431 0 2 0H30C31.1046 0 32 0.895431 32 2V21C32 22.1046 31.1046 23 30 23H2C0.895431 23 0 22.1046 0 21V2ZM6 5H14V8H9V15H14V18H6V5ZM26 5H18V18H26V15H21V8H26V5Z"
+                    fill="white"
+                />
             </svg>
-        </ToggleButton>
+            <svg
+                className="media-caption-icon"
+                width="32"
+                height="26"
+                viewBox="0 0 32 26"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                style={{
+                    display: open ? "block" : "none",
+                    transition: "0.3s all ease",
+                }}
+            >
+                <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M0 2C0 0.89543 0.895431 0 2 0H30C31.1046 0 32 0.895431 32 2V21C32 22.1046 31.1046 23 30 23H2C0.895431 23 0 22.1046 0 21V2ZM6 5H14V8H9V15H14V18H6V5ZM26 5H18V18H26V15H21V8H26V5Z"
+                    fill="white"
+                />
+                <rect
+                    x="4"
+                    y="25"
+                    width="24"
+                    height="2"
+                    rx="1"
+                    fill="white"
+                />
+            </svg>
+        </div>
     );
 }
