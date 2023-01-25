@@ -1,4 +1,3 @@
-//import { ToggleButton } from "@vidstack/react";
 import { useState } from "react";
 
 export function CaptionButton() {

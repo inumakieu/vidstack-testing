@@ -37,3 +37,41 @@
     }
   }
 }
+
+@media only screen and (max-width: 600px) {
+  .container {
+    background: lightblue;
+    width: 100vw;
+    height: 100vw / 16 * 9;
+
+    & .videoWrapper {
+      width: 100vw;
+      height: 100vw / 16 * 9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  
+      & .videoAspect {
+        width: 100vw;
+        height: 100vw / 16 * 9;
+        object-fit: cover;
+        object-position: center;
+        & .videoPlayer {
+          width: 100vw;
+          height: 100vw / 16 * 9;
+          object-fit: cover;
+          object-position: center;
+  
+          display: flex;
+          justify-content: center;
+          align-items: center;
+  
+          & video {
+            width: 100vw;
+            height: 100vw / 16 * 9;
+          }
+        }
+      }
+    }
+  }
+}

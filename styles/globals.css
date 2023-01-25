@@ -448,6 +448,7 @@ vds-gesture {
     font-size: 26px;
     padding: 4px 12px;
     border-radius: 6px;
+    text-align: center;
 }
 
 .media-overlay {
@@ -523,7 +524,7 @@ vds-gesture {
     opacity: 1;
     background: transparent;
     transition: opacity ease 300ms;
-    padding-bottom: 40px;
+    padding-bottom: 20px;
     /* Position above media provider. */
     z-index: 1;
 }
@@ -555,6 +556,12 @@ vds-toggle-button:not([pressed]) .not-pressed {
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
+    transition: 0.3s all ease;
+}
+
+.media-caption-button:hover {
+    scale: 1.08;
 }
 
 .media-next-icon,
@@ -987,18 +994,151 @@ vds-fullscreen-button {
     transition: 0.3s all ease;
 }
 
-.menuItem.selected > .menuItemText > .radioItemWrapper >.radioButtonOutside, .menuItem.selected > .menuItemText > .qualityItem > .radioItemWrapper >.radioButtonOutside {
-  outline: 2px solid white;
+.menuItem.selected > .menuItemText > .radioItemWrapper > .radioButtonOutside,
+.menuItem.selected
+    > .menuItemText
+    > .qualityItem
+    > .radioItemWrapper
+    > .radioButtonOutside {
+    outline: 2px solid white;
 }
 
 .radioButtonInside {
-  background: #8a8a8a;
-  transition: 0.3s all ease;
+    background: #8a8a8a;
+    transition: 0.3s all ease;
 }
 
-.menuItem.selected > .menuItemText > .radioItemWrapper > .radioButtonOutside >.radioButtonInside, .menuItem.selected > .menuItemText > .qualityItem > .radioItemWrapper >.radioButtonOutside > .radioButtonInside {
+.menuItem.selected
+    > .menuItemText
+    > .radioItemWrapper
+    > .radioButtonOutside
+    > .radioButtonInside,
+.menuItem.selected
+    > .menuItemText
+    > .qualityItem
+    > .radioItemWrapper
+    > .radioButtonOutside
+    > .radioButtonInside {
     width: 6px;
     height: 6px;
     background: white;
     border-radius: 40px;
+}
+
+vds-play-button,
+vds-mute-button,
+vds-fullscreen-button {
+    min-width: 32px !important;
+    min-height: 32px !important;
+}
+
+.mobilePlayControls {
+    display: none;
+    transition: 0.3s all ease;
+}
+
+.videoTimeSlider {
+    transition: 0.3s all ease;
+}
+
+@media only screen and (max-width: 600px) {
+    .time,
+    .vidstackLogoWrapper,
+    .videoTime {
+        display: none;
+    }
+
+    .subtitle {
+        font-size: 12px;
+        padding: 2px 6px;
+        border-radius: 4px;
+    }
+
+    .progressWrapper,
+    .media-controls {
+        padding: 0;
+    }
+
+    .videoTimeSlider {
+        margin: 0;
+        --media-slider-height: 4px;
+        --media-slider-thumb-size: 0px;
+        --media-slider-track-height: 4px;
+    }
+
+    .videoTimeSlider.opened {
+        margin: 0;
+        --media-slider-height: 6px;
+        --media-slider-thumb-size: 12px;
+        --media-slider-focused-thumb-size: calc(var(--thumb-size) * 1.1);
+        --media-slider-track-height: 6px;
+        --media-slider-focused-track-height: calc(var(--track-height) * 1.25);
+    }
+
+    .top-bar {
+        padding: 8px;
+        display: none;
+    }
+
+    .subtitlesWrapper {
+        padding-bottom: 12px;
+    }
+
+    .mobilePlayControls {
+        grid-area: 1/1/1/1;
+        display: none;
+        align-items: center;
+        justify-content: space-evenly;
+        width: 100vw;
+        aspect-ratio: 16/9;
+        transition: 0.3s all ease;
+        background: rgba(0, 0, 0, 0.5);
+    }
+    .mobilePlayControls.opened {
+        display: flex;
+    }
+
+    .mobilePlayWrapper {
+        background: rgba(22, 22, 22, 0.7);
+        width: 52px;
+        height: 52px;
+        border-radius: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        outline: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .skipWrapper {
+        background: rgba(22, 22, 22, 0.7);
+        width: 38px;
+        height: 38px;
+        border-radius: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        outline: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .mobileControlsAboveProgress {
+        width: 100vw;
+        height: 32px;
+        padding: 0 8px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .videoTimeRemaining {
+        font-size: 12px;
+        font-weight: 400;
+    }
+
+    .fullscreenMobile {
+        min-width: 18px !important;
+        min-height: 18px !important;
+        width: 18px !important;
+        height: 18px !important;
+        scale: 0.8;
+    }
 }
