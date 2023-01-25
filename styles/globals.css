@@ -1094,6 +1094,7 @@ vds-fullscreen-button {
         transition: 0.3s all ease;
         background: rgba(0, 0, 0, 0.5);
     }
+    
     .mobilePlayControls.opened {
         display: flex;
     }
