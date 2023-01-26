@@ -802,6 +802,7 @@ vds-volume-slider:not(:hover) {
     font-weight: 400;
     margin-left: 0;
     padding-left: 0;
+    color: white;
 }
 
 .volume-track {
@@ -886,11 +887,13 @@ vds-time-slider[dragging] .slider-thumb-container {
 .vidstackTitle {
     font-weight: 400;
     font-size: 16px;
+    color: white;
 }
 
 .videoTime {
     font-size: 14px;
     font-weight: 400;
+    color: white;
 }
 
 vds-play-button {
