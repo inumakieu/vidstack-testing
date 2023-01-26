@@ -875,6 +875,7 @@ vds-time-slider[dragging] .slider-thumb-container {
     border: 1px solid rgba(255, 255, 255, 0.04);
     padding: 0 8px;
     border-radius: 40px;
+    margin-right: auto;
 }
 
 .vidstackLogo {
@@ -1052,6 +1053,35 @@ vds-fullscreen-button {
     transition: 0.3s all ease;
 }
 
+.chapterWrapper {
+    background: rgba(194, 194, 194, 0);
+    padding: 4px;
+    border-radius: 4px;
+    padding-bottom: 0;
+    margin-bottom: 0;
+    transition: 0.3s all ease;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
+    margin-right: 12px;
+}
+
+.chapterWrapper > svg {
+    margin-bottom: 4px;
+}
+
+.chapterWrapper.active,
+.chapterWrapper:hover {
+    background: rgba(194, 194, 194, 0.4);
+    padding: 4px;
+    border-radius: 4px;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
 @media only screen and (max-width: 600px) {
     .time,
     .vidstackLogoWrapper,
@@ -1153,4 +1183,18 @@ vds-fullscreen-button {
         height: 18px !important;
         scale: 0.8;
     }
+}
+
+.chapterItem {
+    background: rgba(255, 255, 255, 0.0);
+    border-left: 4px solid rgba(255, 255, 255, 0);
+    display: flex;
+    height: 52px;
+    align-items: center;
+    transition: 0.3s all ease;
+}
+
+.chapterItem.active {
+    background: rgba(255, 255, 255, 0.1);
+    border-left: 4px solid white;
 }

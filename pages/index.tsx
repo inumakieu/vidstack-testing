@@ -24,6 +24,7 @@ import "vidstack/styles/base.css";
 // the following styles are optional - remove to go headless.
 import "vidstack/styles/ui/buttons.css";
 import "vidstack/styles/ui/sliders.css";
+import { ChaptersPanel } from "../components/chapters_panel";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -72,6 +73,7 @@ export default function Home(props) {
 
 function MediaPlayerUI(props) {
     const [open, setOpen] = useState(false);
+    const [showChapters, setShowChapters] = useState(false);
     const [showControls, setShowControls] = useState(false);
     const [cues, setCues] = useState([]);
     const media = useMediaElement();
@@ -161,17 +163,39 @@ function MediaPlayerUI(props) {
                             </span>
                         </div>
                     </a>
+                    <div
+                        onClick={() => {
+                            setShowChapters(!showChapters);
+                            setOpen(false)
+                        }}
+                        className={`chapterWrapper ${
+                            showChapters ? "active" : ""
+                        }`}
+                    >
+                        <svg
+                            width="20"
+                            height="18"
+                            viewBox="0 0 20 18"
+                            fill="white"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path d="M10.6061 17.1678C10.284 17.1678 10.0228 16.9066 10.0228 16.5844L10.0228 1.41778C10.0228 1.09561 10.284 0.834442 10.6061 0.834442L12.3561 0.834442C12.6783 0.834442 12.9395 1.09561 12.9395 1.41778L12.9395 16.5844C12.9395 16.9066 12.6783 17.1678 12.3561 17.1678H10.6061Z" />
+                            <path d="M17.0228 17.1678C16.7006 17.1678 16.4395 16.9066 16.4395 16.5844L16.4395 1.41778C16.4395 1.09561 16.7006 0.834442 17.0228 0.834442L18.7728 0.834442C19.095 0.834442 19.3561 1.09561 19.3561 1.41778V16.5844C19.3561 16.9066 19.095 17.1678 18.7728 17.1678H17.0228Z" />
+                            <path d="M0.796022 15.9481C0.71264 16.2593 0.897313 16.5791 1.2085 16.6625L2.89887 17.1154C3.21006 17.1988 3.52992 17.0141 3.61331 16.703L7.53873 2.05308C7.62211 1.74189 7.43744 1.42203 7.12625 1.33865L5.43588 0.885715C5.12469 0.802332 4.80483 0.987005 4.72144 1.29819L0.796022 15.9481Z" />
+                        </svg>
+                    </div>
 
                     <div
                         aria-label="Settings"
                         onClick={() => {
                             setOpen(!open);
+                            setShowChapters(false)
                         }}
                         className={`media-settings-button ${
                             open ? "active" : ""
                         }`}
                     >
-                        <span
+                        <svg
                             className="material-symbols-outlined media-settings-icon"
                             style={{
                                 transform: open
@@ -179,9 +203,18 @@ function MediaPlayerUI(props) {
                                     : "rotate(0deg)",
                                 transition: "0.3s all ease",
                             }}
+                            width="16"
+                            height="16"
+                            viewBox="0 0 20 20"
+                            fill="white"
+                            xmlns="http://www.w3.org/2000/svg"
                         >
-                            settings
-                        </span>
+                            <path
+                                fill-rule="evenodd"
+                                clip-rule="evenodd"
+                                d="M7.87568 0.666664C7.58751 0.666664 7.34252 0.87709 7.29903 1.16196L6.85555 4.06677C6.85001 4.10301 6.82774 4.13448 6.79561 4.15213C6.70884 4.19979 6.62325 4.24932 6.53889 4.30067C6.50752 4.31977 6.46906 4.32337 6.43485 4.31003L3.69626 3.24231C3.42784 3.13766 3.12323 3.24463 2.97918 3.49413L0.85547 7.17251C0.711385 7.42207 0.771125 7.73945 0.996083 7.91955L3.29145 9.75719C3.32008 9.78011 3.3362 9.81515 3.3354 9.85181C3.33433 9.90086 3.3338 9.95004 3.3338 9.99935C3.3338 10.0488 3.33434 10.0981 3.33541 10.1473C3.33621 10.184 3.3201 10.219 3.29149 10.2419L0.996515 12.0805C0.771678 12.2607 0.712012 12.578 0.856059 12.8275L2.97977 16.5058C3.12386 16.7554 3.42859 16.8624 3.69704 16.7576L6.43522 15.6889C6.46944 15.6756 6.50792 15.6792 6.5393 15.6983C6.62352 15.7495 6.70896 15.799 6.79558 15.8465C6.82771 15.8642 6.84999 15.8957 6.85552 15.9319L7.29903 18.8369C7.34252 19.1218 7.58751 19.3322 7.87568 19.3322H12.1231C12.4112 19.3322 12.6561 19.1219 12.6997 18.8371L13.1442 15.9325C13.1497 15.8963 13.172 15.8649 13.2041 15.8472C13.2912 15.7994 13.3772 15.7497 13.4619 15.6981C13.4932 15.679 13.5317 15.6754 13.5659 15.6888L16.303 16.757C16.5715 16.8618 16.8762 16.7548 17.0203 16.5053L19.144 12.8269C19.2881 12.5774 19.2284 12.2601 19.0035 12.08L16.7094 10.242C16.6808 10.2191 16.6647 10.1841 16.6655 10.1474C16.6666 10.0982 16.6671 10.0488 16.6671 9.99935C16.6671 9.95 16.6666 9.90078 16.6655 9.85169C16.6647 9.81503 16.6809 9.77998 16.7095 9.75707L19.004 7.92012C19.2289 7.74002 19.2887 7.42264 19.1446 7.17307L17.0209 3.4947C16.8768 3.2452 16.5722 3.13823 16.3038 3.24288L13.5663 4.31017C13.5321 4.32351 13.4936 4.31991 13.4623 4.30081C13.3774 4.24917 13.2914 4.19937 13.2041 4.15146C13.172 4.13383 13.1497 4.10236 13.1442 4.06613L12.6997 1.16176C12.6561 0.876982 12.4112 0.666664 12.1231 0.666664H7.87568ZM10.0001 13.7497C12.0713 13.7497 13.7504 12.0706 13.7504 9.99939C13.7504 7.92814 12.0713 6.24906 10.0001 6.24906C7.92881 6.24906 6.24974 7.92814 6.24974 9.99939C6.24974 12.0706 7.92881 13.7497 10.0001 13.7497Z"
+                            />
+                        </svg>
                     </div>
                 </div>
                 <div
@@ -225,8 +258,7 @@ function MediaPlayerUI(props) {
                             className={`videoTimeSlider ${
                                 showControls ? "opened" : ""
                             }`}
-                        >
-                        </TimeSlider>
+                        ></TimeSlider>
                         <h4 className="videoTime">{videoDuration}</h4>
                     </div>
 
@@ -251,31 +283,55 @@ function MediaPlayerUI(props) {
                                 sources={[]}
                                 subtitles={[]}
                             />
+                            {showChapters ? <ChaptersPanel  chapters={[
+                              {
+                                title: "Nature Stroll",
+                                length: "1 min 20 sec"
+                              },
+                              {
+                                title: "The Campsite",
+                                length: "2 min"
+                              },
+                              {
+                                title: "Meeting the sprites",
+                                length: "1 min 9 sec"
+                              },
+                              {
+                                title: "Things go wrong",
+                                length: "3 min"
+                              },
+                              {
+                                title: "Lucky escape",
+                                length: "3 min"
+                              }
+                            ]}/> : ""}
                             <CaptionButton />
-                            <FullscreenButton>
-                                <svg
-                                    className="media-enter-fs-icon"
-                                    aria-hidden="true"
-                                    viewBox="0 0 24 24"
-                                    slot="enter"
-                                >
-                                    <path
-                                        fill="currentColor"
-                                        d="M16 3h6v6h-2V5h-4V3zM2 3h6v2H4v4H2V3zm18 16v-4h2v6h-6v-2h4zM4 19h4v2H2v-6h2v4z"
-                                    />
-                                </svg>
-                                <svg
-                                    className="media-exit-fs-icon"
-                                    aria-hidden="true"
-                                    viewBox="0 0 24 24"
-                                    slot="exit"
-                                >
-                                    <path
-                                        fill="currentColor"
-                                        d="M18 7h4v2h-6V3h2v4zM8 9H2V7h4V3h2v6zm10 8v4h-2v-6h6v2h-4zM8 15v6H6v-4H2v-2h6z"
-                                    />
-                                </svg>
-                            </FullscreenButton>
+                        <FullscreenButton className="fullscreenMobile">
+                            <svg
+                                width="12"
+                                height="12"
+                                viewBox="0 0 18 18"
+                                fill="white"
+                                xmlns="http://www.w3.org/2000/svg"
+                                slot="enter"
+                            >
+                                <path d="M17.1637 1.35703C17.1338 1.06289 16.8854 0.833344 16.5834 0.833344H11.9167C11.5945 0.833344 11.3334 1.09451 11.3334 1.41668V3.16668C11.3334 3.48884 11.5945 3.75001 11.9167 3.75001L14.1334 3.75001C14.1978 3.75001 14.25 3.80224 14.25 3.86668V6.08334C14.25 6.40551 14.5112 6.66668 14.8334 6.66668H16.5834C16.9055 6.66668 17.1667 6.40551 17.1667 6.08334V1.41668C17.1667 1.39654 17.1657 1.37664 17.1637 1.35703Z" />
+                                <path d="M14.25 14.1333C14.25 14.1978 14.1978 14.25 14.1334 14.25L11.9167 14.25C11.5945 14.25 11.3334 14.5112 11.3334 14.8333V16.5833C11.3334 16.9055 11.5945 17.1667 11.9167 17.1667H16.5834C16.9055 17.1667 17.1667 16.9055 17.1667 16.5833V11.9167C17.1667 11.5945 16.9055 11.3333 16.5834 11.3333H14.8334C14.5112 11.3333 14.25 11.5945 14.25 11.9167V14.1333Z" />
+                                <path d="M6.08337 14.25H3.86671C3.80227 14.25 3.75004 14.1978 3.75004 14.1333V11.9167C3.75004 11.5945 3.48887 11.3333 3.16671 11.3333H1.41671C1.09454 11.3333 0.833374 11.5945 0.833374 11.9167V16.5833C0.833374 16.9055 1.09454 17.1667 1.41671 17.1667H6.08337C6.40554 17.1667 6.66671 16.9055 6.66671 16.5833V14.8333C6.66671 14.5112 6.40554 14.25 6.08337 14.25Z" />
+                                <path d="M3.75004 6.08334V3.86668C3.75004 3.80224 3.80227 3.75001 3.86671 3.75001L6.08337 3.75001C6.40554 3.75001 6.66671 3.48884 6.66671 3.16668V1.41668C6.66671 1.09451 6.40554 0.833344 6.08337 0.833344H1.41671C1.09454 0.833344 0.833374 1.09451 0.833374 1.41668V6.08334C0.833374 6.40551 1.09454 6.66668 1.41671 6.66668H3.16671C3.48887 6.66668 3.75004 6.40551 3.75004 6.08334Z" />
+                            </svg>
+                            <svg
+                                className="media-exit-fs-icon"
+                                aria-hidden="true"
+                                viewBox="0 0 24 24"
+                                slot="exit"
+                            >
+                                <path
+                                    fill="currentColor"
+                                    d="M18 7h4v2h-6V3h2v4zM8 9H2V7h4V3h2v6zm10 8v4h-2v-6h6v2h-4zM8 15v6H6v-4H2v-2h6z"
+                                />
+                            </svg>
+                        </FullscreenButton>
                         </div>
                     </div>
                 </div>
@@ -330,15 +386,16 @@ function MediaPlayerUI(props) {
 }
 
 export async function getServerSideProps(context) {
+    const parser = new WebVTTParser();
+    const webVtt = await axios.get(
+        "https://cc.zorores.com/fa/64/fa6423d95507c06d2aad3cffe6bd0ea6/eng-3.vtt"
+    );
+    //console.log(webVtt.data);
 
-  const parser = new WebVTTParser();
-  const webVtt = await axios.get("https://cc.zorores.com/fa/64/fa6423d95507c06d2aad3cffe6bd0ea6/eng-3.vtt");
-  //console.log(webVtt.data);
+    const tree = parser.parse(webVtt.data, "metadata");
 
-  const tree = parser.parse(webVtt.data, "metadata");
+    console.log(tree.cues[0]);
 
-  console.log(tree.cues[0]);
-
-  // Pass data to the page via props
-  return { props: { tree } };
+    // Pass data to the page via props
+    return { props: { tree } };
 }
