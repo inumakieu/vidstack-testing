@@ -91,7 +91,7 @@ body {
 }
 
 a {
-    color: inherit;
+    color: white;
     text-decoration: none;
 }
 
@@ -653,7 +653,7 @@ vds-fullscreen-button {
     width: 340px;
     height: 40px;
     align-items: center;
-    gap: 32px;
+    gap: 22px;
 }
 
 .media-preview-container {
