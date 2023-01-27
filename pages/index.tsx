@@ -144,7 +144,7 @@ function MediaPlayerUI(props) {
 
     return (
         <div>
-            <div className="media-overlay">
+            <div className={`media-overlay ${showControls ? "opened" : ""}`}>
                 <div className={`top-bar ${showControls ? "opened" : ""}`}>
                     <div className="navigateBack">
                     <svg width="16" height="16" viewBox="0 0 10 18" fill="white" xmlns="http://www.w3.org/2000/svg">
@@ -394,7 +394,7 @@ function MediaPlayerUI(props) {
                     className="subtitle"
                     id="subtitles"
                     style={{
-                        opacity: cues.length != 0 ? "1.0" : "0.0",
+                        opacity: cues.length > 0 ? "1.0" : "0.0",
                         transition: "0.3s all ease",
                     }}
                 ></p>

@@ -1356,6 +1356,16 @@ vds-fullscreen-button {
     vds-time-slider [part='thumb'] {
         opacity: 1 !important;
       }
+
+      .top-bar, .mobilePlayControls, .progressWrapper, .mobileControlsAboveProgress {
+        opacity: 0.0;
+    }
+
+      .top-bar.opened, .mobilePlayControls.opened, .media-overlay.opened > .media-controls > .progressWrapper, .mobileControlsAboveProgress.opened{
+          opacity: 1.0;
+      }
+  
+
 }
 
 .chapterWrapper > svg {
