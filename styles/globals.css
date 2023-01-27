@@ -800,7 +800,8 @@ vds-volume-slider:not(:hover) {
 }
 
 .video-title {
-    font-size: 16px;
+    font-size: 18px;
+    letter-spacing: 0.4px;
     font-weight: 400;
     margin-left: 0;
     padding-left: 0;
@@ -871,7 +872,7 @@ vds-time-slider[dragging] .slider-thumb-container {
     width: auto;
     align-items: center;
     height: 40px;
-    gap: 8px;
+    gap: 4px;
     background: rgba(22, 22, 22, 0.9);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
@@ -888,12 +889,19 @@ vds-time-slider[dragging] .slider-thumb-container {
 
 .vidstackTitle {
     font-weight: 400;
-    font-size: 16px;
+    font-size: 18px;
     color: white;
+    letter-spacing: 0.4px;
+}
+
+.material-symbols-outlined {
+    width: 22px;
+    height: 22px;
 }
 
 .videoTime {
-    font-size: 14px;
+    font-size: 16px;
+    letter-spacing: 0.4px;
     font-weight: 400;
     color: white;
 }
@@ -1221,12 +1229,138 @@ vds-fullscreen-button {
     .menuCon {
         width: calc(100vw - 32px);
         top: unset;
-        right: 16px;
-        left: 16px;
+        transform: translate(-50%, 0%);
+        left: 50%;
         top: calc(100vh - var(--height) - 16px);
         z-index: 101 !important;
         position: absolute;
     }
+}
+
+@media (orientation: landscape) and (max-width: 1000px) and (max-height: 700px) {
+    .menuCon {
+        width: calc(100vw - 32px);
+        max-width: 500px;
+        top: unset;
+        transform: translate(-50%, 0%);
+        left: 50%;
+        bottom: 16px;
+        z-index: 101 !important;
+        position: absolute;
+    }
+
+    .vidstackLogoWrapper {
+        display: none;
+    }
+
+    .subtitlesWrapper {
+        padding-bottom: 60px;
+    }
+
+    .subtitle {
+        font-size: 18px;
+        padding: 2px 6px;
+        border-radius: 4px;
+    }
+
+    .time {
+        display: none;
+    }
+
+    .mobileControlsAboveProgress {
+        display: flex;
+        margin-right: 32px;
+    }
+
+    .top-bar {
+        padding-left: 24px;
+        padding-right: 24px;
+    }
+
+    .mobilePlayControls {
+        grid-area: 1/1/1/1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 100px;
+        width: 100vw;
+        height: 100vh;
+        transition: 0.3s all ease;
+        background: rgba(0, 0, 0, 0.5);
+    }
+
+    .videoTimeRemaining {
+        display: none;
+    }
+
+    .videoTime {
+        font-size: 14px;
+    }
+
+    .fullscreenMobile {
+        min-width: 18px !important;
+        min-height: 18px !important;
+        width: 18px !important;
+        height: 18px !important;
+        scale: 1;
+    }
+
+    .mobilePlayWrapper {
+        background: rgba(22, 22, 22, 0.7);
+        width: 52px;
+        height: 52px;
+        border-radius: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        outline: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .mobilePlayWrapper > vds-play-button [slot="play"] {
+        width: 38px;
+        height: 38px;
+    }
+
+    .skipWrapper {
+        background: rgba(22, 22, 22, 0.7);
+        width: 38px;
+        height: 38px;
+        border-radius: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        outline: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .skipWrapper > svg {
+        width: 22px;
+        height: 22px;
+    }
+
+    .video-title {
+        font-size: 14px;
+    }
+
+    .navigateBack {
+        padding-top: 4px;
+        padding-left: 4px;
+        padding-right: 4px;
+    }
+
+    .navigateBack > svg {
+        transform: scaleX(-1);
+        width: 18px;
+        height: 18px;
+    }
+
+    vds-time-slider [part='thumb'] {
+        opacity: 1 !important;
+      }
+}
+
+.chapterWrapper > svg {
+    width: 24px;
+    height: 24px;
 }
 
 .chapterItem {
@@ -1241,4 +1375,9 @@ vds-fullscreen-button {
 .chapterItem.active {
     background: rgba(255, 255, 255, 0.1);
     border-left: 4px solid white;
+}
+
+vds-time-slider {
+    margin-left: 12px;
+    margin-right: 12px;
 }

@@ -1,11 +1,17 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "../styles/ChaptersPanel.module.scss"
 
 export function ChaptersPanel(props: any) {
     const [selectedChapter, setSelectedChapter] = useState(0);
+    const [height, setHeight] = useState(0)
+  const ref = useRef(null)
+
+  useEffect(() => {
+    setHeight(ref.current.clientHeight)
+  }, [])
 
     return (
-        <div className={styles.panel}>
+        <div ref={ref} style={{['--chapterHeight' as any]: `${height}px`}} className={styles.panel}>
             <div className={styles.chapterHeading}>
                 Chapters
                 <svg width="18" height="18" viewBox="0 0 18 21" fill="white" xmlns="http://www.w3.org/2000/svg">

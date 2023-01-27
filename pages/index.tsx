@@ -146,6 +146,11 @@ function MediaPlayerUI(props) {
         <div>
             <div className="media-overlay">
                 <div className={`top-bar ${showControls ? "opened" : ""}`}>
+                    <div className="navigateBack">
+                    <svg width="16" height="16" viewBox="0 0 10 18" fill="white" xmlns="http://www.w3.org/2000/svg">
+<path d="M5.7036 9.08318C5.74916 9.03762 5.74916 8.96375 5.7036 8.91819L0.175798 3.39039C-0.0520075 3.16258 -0.0520077 2.79324 0.175798 2.56543L1.57823 1.163C1.80603 0.935198 2.17538 0.935198 2.40318 1.163L8.40032 7.16014C8.40932 7.1681 8.41813 7.17638 8.42674 7.18499L9.82917 8.58742C10.057 8.81523 10.057 9.18457 9.82917 9.41238L2.40455 16.837C2.17674 17.0648 1.8074 17.0648 1.57959 16.837L0.177163 15.4346C-0.0506432 15.2068 -0.0506436 14.8374 0.177162 14.6096L5.7036 9.08318Z"/>
+</svg>
+                    </div>
                     <a
                         target="_blank"
                         href="https://www.vidstack.io/"
@@ -158,11 +163,17 @@ function MediaPlayerUI(props) {
                                 alt=""
                             />
                             <h4 className="vidstackTitle">Vidstack Player</h4>
-                            <span className="material-symbols-outlined">
-                                chevron_right
-                            </span>
+                            <svg width="16" height="16" viewBox="0 0 10 18" fill="white" xmlns="http://www.w3.org/2000/svg">
+<path d="M5.7036 9.08318C5.74916 9.03762 5.74916 8.96375 5.7036 8.91819L0.175798 3.39039C-0.0520075 3.16258 -0.0520077 2.79324 0.175798 2.56543L1.57823 1.163C1.80603 0.935198 2.17538 0.935198 2.40318 1.163L8.40032 7.16014C8.40932 7.1681 8.41813 7.17638 8.42674 7.18499L9.82917 8.58742C10.057 8.81523 10.057 9.18457 9.82917 9.41238L2.40455 16.837C2.17674 17.0648 1.8074 17.0648 1.57959 16.837L0.177163 15.4346C-0.0506432 15.2068 -0.0506436 14.8374 0.177162 14.6096L5.7036 9.08318Z"/>
+</svg>
+
                         </div>
                     </a>
+                    <div className="title-wrapper">
+                            <h2 className="video-title">
+                                Video Title : Chapter Name
+                            </h2>
+                        </div>
                     <div
                         onClick={() => {
                             setShowChapters(!showChapters);
@@ -195,6 +206,7 @@ function MediaPlayerUI(props) {
                             open ? "active" : ""
                         }`}
                     >
+
                         <svg
                             className="material-symbols-outlined media-settings-icon"
                             style={{
