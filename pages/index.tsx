@@ -323,7 +323,7 @@ function MediaPlayerUI(props) {
                             <CaptionButton />
                         </div>
                     </div>
-                    <SettingsPanel isOpen={open} sources={[]} subtitles={[]} />
+                    <SettingsPanel setIsOpen={setOpen} isOpen={open} sources={[]} subtitles={[]} />
                     {showChapters ? (
                         <ChaptersPanel
                             chapters={[
