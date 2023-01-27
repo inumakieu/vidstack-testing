@@ -161,6 +161,13 @@ export function SettingsPanel(props: any) {
                             : _a.offsetHeight) !== null && _b !== void 0
                         ? _b
                         : 100) + "px";
+                        this.DDMinstance.menuCon.style.setProperty('--height', ((_b =
+                          (_a = this.element.querySelector(".scene")) === null ||
+                          _a === void 0
+                              ? void 0
+                              : _a.offsetHeight) !== null && _b !== void 0
+                          ? _b
+                          : 100) + "px")
             }
         }
         delete() {
@@ -228,6 +235,8 @@ export function SettingsPanel(props: any) {
                         this.menuCon.style.height =
                             this.scenes[sceneID].element.querySelector(".scene")
                                 .offsetHeight + "px";
+                        this.menuCon.style.setProperty('--height', this.scenes[sceneID].element.querySelector(".scene")
+                        .offsetHeight + "px")
                     } else {
                         this.scenes[sceneID].element.classList.remove("active");
                     }
@@ -797,7 +806,7 @@ export function SettingsPanel(props: any) {
 
     return (
         <div className={styles.menuWrapper}>
-            <div className={styles.menuCon} ref={menuCon}></div>
+            <div className="menuCon" ref={menuCon}></div>
         </div>
     );
 }

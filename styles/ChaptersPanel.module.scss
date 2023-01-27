@@ -53,3 +53,13 @@
         font-size: 14px;
     }
 }
+
+@media only screen and (max-width: 600px) {
+    .panel {
+        width: calc(100vw - 32px);
+        position: absolute;
+        left: 16px;
+        right: 16px;
+        top: calc(100vh - 150% - 14px);
+    }
+}

@@ -145,7 +145,7 @@ function MediaPlayerUI(props) {
     return (
         <div>
             <div className="media-overlay">
-                <div className="top-bar">
+                <div className={`top-bar ${showControls ? "opened" : ""}`}>
                     <a
                         target="_blank"
                         href="https://www.vidstack.io/"
@@ -166,7 +166,7 @@ function MediaPlayerUI(props) {
                     <div
                         onClick={() => {
                             setShowChapters(!showChapters);
-                            setOpen(false)
+                            setOpen(false);
                         }}
                         className={`chapterWrapper ${
                             showChapters ? "active" : ""
@@ -189,7 +189,7 @@ function MediaPlayerUI(props) {
                         aria-label="Settings"
                         onClick={() => {
                             setOpen(!open);
-                            setShowChapters(false)
+                            setShowChapters(false);
                         }}
                         className={`media-settings-button ${
                             open ? "active" : ""
@@ -223,7 +223,11 @@ function MediaPlayerUI(props) {
                         setShowControls(!showControls);
                     }}
                 >
-                    <div className="mobileControlsAboveProgress">
+                    <div
+                        className={`mobileControlsAboveProgress ${
+                            showControls ? "opened" : ""
+                        }`}
+                    >
                         <h4 className="videoTimeRemaining">{remaining}</h4>
                         <FullscreenButton className="fullscreenMobile">
                             <svg
@@ -278,62 +282,64 @@ function MediaPlayerUI(props) {
                             </h2>
                         </div>
                         <div className="media-controls-buttons">
-                            <SettingsPanel
-                                isOpen={open}
-                                sources={[]}
-                                subtitles={[]}
-                            />
-                            {showChapters ? <ChaptersPanel  chapters={[
-                              {
-                                title: "Nature Stroll",
-                                length: "1 min 20 sec"
-                              },
-                              {
-                                title: "The Campsite",
-                                length: "2 min"
-                              },
-                              {
-                                title: "Meeting the sprites",
-                                length: "1 min 9 sec"
-                              },
-                              {
-                                title: "Things go wrong",
-                                length: "3 min"
-                              },
-                              {
-                                title: "Lucky escape",
-                                length: "3 min"
-                              }
-                            ]}/> : ""}
+                            <FullscreenButton className="fullscreenMobile">
+                                <svg
+                                    width="12"
+                                    height="12"
+                                    viewBox="0 0 18 18"
+                                    fill="white"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    slot="enter"
+                                >
+                                    <path d="M17.1637 1.35703C17.1338 1.06289 16.8854 0.833344 16.5834 0.833344H11.9167C11.5945 0.833344 11.3334 1.09451 11.3334 1.41668V3.16668C11.3334 3.48884 11.5945 3.75001 11.9167 3.75001L14.1334 3.75001C14.1978 3.75001 14.25 3.80224 14.25 3.86668V6.08334C14.25 6.40551 14.5112 6.66668 14.8334 6.66668H16.5834C16.9055 6.66668 17.1667 6.40551 17.1667 6.08334V1.41668C17.1667 1.39654 17.1657 1.37664 17.1637 1.35703Z" />
+                                    <path d="M14.25 14.1333C14.25 14.1978 14.1978 14.25 14.1334 14.25L11.9167 14.25C11.5945 14.25 11.3334 14.5112 11.3334 14.8333V16.5833C11.3334 16.9055 11.5945 17.1667 11.9167 17.1667H16.5834C16.9055 17.1667 17.1667 16.9055 17.1667 16.5833V11.9167C17.1667 11.5945 16.9055 11.3333 16.5834 11.3333H14.8334C14.5112 11.3333 14.25 11.5945 14.25 11.9167V14.1333Z" />
+                                    <path d="M6.08337 14.25H3.86671C3.80227 14.25 3.75004 14.1978 3.75004 14.1333V11.9167C3.75004 11.5945 3.48887 11.3333 3.16671 11.3333H1.41671C1.09454 11.3333 0.833374 11.5945 0.833374 11.9167V16.5833C0.833374 16.9055 1.09454 17.1667 1.41671 17.1667H6.08337C6.40554 17.1667 6.66671 16.9055 6.66671 16.5833V14.8333C6.66671 14.5112 6.40554 14.25 6.08337 14.25Z" />
+                                    <path d="M3.75004 6.08334V3.86668C3.75004 3.80224 3.80227 3.75001 3.86671 3.75001L6.08337 3.75001C6.40554 3.75001 6.66671 3.48884 6.66671 3.16668V1.41668C6.66671 1.09451 6.40554 0.833344 6.08337 0.833344H1.41671C1.09454 0.833344 0.833374 1.09451 0.833374 1.41668V6.08334C0.833374 6.40551 1.09454 6.66668 1.41671 6.66668H3.16671C3.48887 6.66668 3.75004 6.40551 3.75004 6.08334Z" />
+                                </svg>
+                                <svg
+                                    className="media-exit-fs-icon"
+                                    aria-hidden="true"
+                                    viewBox="0 0 24 24"
+                                    slot="exit"
+                                >
+                                    <path
+                                        fill="currentColor"
+                                        d="M18 7h4v2h-6V3h2v4zM8 9H2V7h4V3h2v6zm10 8v4h-2v-6h6v2h-4zM8 15v6H6v-4H2v-2h6z"
+                                    />
+                                </svg>
+                            </FullscreenButton>
                             <CaptionButton />
-                        <FullscreenButton className="fullscreenMobile">
-                            <svg
-                                width="12"
-                                height="12"
-                                viewBox="0 0 18 18"
-                                fill="white"
-                                xmlns="http://www.w3.org/2000/svg"
-                                slot="enter"
-                            >
-                                <path d="M17.1637 1.35703C17.1338 1.06289 16.8854 0.833344 16.5834 0.833344H11.9167C11.5945 0.833344 11.3334 1.09451 11.3334 1.41668V3.16668C11.3334 3.48884 11.5945 3.75001 11.9167 3.75001L14.1334 3.75001C14.1978 3.75001 14.25 3.80224 14.25 3.86668V6.08334C14.25 6.40551 14.5112 6.66668 14.8334 6.66668H16.5834C16.9055 6.66668 17.1667 6.40551 17.1667 6.08334V1.41668C17.1667 1.39654 17.1657 1.37664 17.1637 1.35703Z" />
-                                <path d="M14.25 14.1333C14.25 14.1978 14.1978 14.25 14.1334 14.25L11.9167 14.25C11.5945 14.25 11.3334 14.5112 11.3334 14.8333V16.5833C11.3334 16.9055 11.5945 17.1667 11.9167 17.1667H16.5834C16.9055 17.1667 17.1667 16.9055 17.1667 16.5833V11.9167C17.1667 11.5945 16.9055 11.3333 16.5834 11.3333H14.8334C14.5112 11.3333 14.25 11.5945 14.25 11.9167V14.1333Z" />
-                                <path d="M6.08337 14.25H3.86671C3.80227 14.25 3.75004 14.1978 3.75004 14.1333V11.9167C3.75004 11.5945 3.48887 11.3333 3.16671 11.3333H1.41671C1.09454 11.3333 0.833374 11.5945 0.833374 11.9167V16.5833C0.833374 16.9055 1.09454 17.1667 1.41671 17.1667H6.08337C6.40554 17.1667 6.66671 16.9055 6.66671 16.5833V14.8333C6.66671 14.5112 6.40554 14.25 6.08337 14.25Z" />
-                                <path d="M3.75004 6.08334V3.86668C3.75004 3.80224 3.80227 3.75001 3.86671 3.75001L6.08337 3.75001C6.40554 3.75001 6.66671 3.48884 6.66671 3.16668V1.41668C6.66671 1.09451 6.40554 0.833344 6.08337 0.833344H1.41671C1.09454 0.833344 0.833374 1.09451 0.833374 1.41668V6.08334C0.833374 6.40551 1.09454 6.66668 1.41671 6.66668H3.16671C3.48887 6.66668 3.75004 6.40551 3.75004 6.08334Z" />
-                            </svg>
-                            <svg
-                                className="media-exit-fs-icon"
-                                aria-hidden="true"
-                                viewBox="0 0 24 24"
-                                slot="exit"
-                            >
-                                <path
-                                    fill="currentColor"
-                                    d="M18 7h4v2h-6V3h2v4zM8 9H2V7h4V3h2v6zm10 8v4h-2v-6h6v2h-4zM8 15v6H6v-4H2v-2h6z"
-                                />
-                            </svg>
-                        </FullscreenButton>
                         </div>
                     </div>
+                    <SettingsPanel isOpen={open} sources={[]} subtitles={[]} />
+                    {showChapters ? (
+                        <ChaptersPanel
+                            chapters={[
+                                {
+                                    title: "Nature Stroll",
+                                    length: "1 min 20 sec",
+                                },
+                                {
+                                    title: "The Campsite",
+                                    length: "2 min",
+                                },
+                                {
+                                    title: "Meeting the sprites",
+                                    length: "1 min 9 sec",
+                                },
+                                {
+                                    title: "Things go wrong",
+                                    length: "3 min",
+                                },
+                                {
+                                    title: "Lucky escape",
+                                    length: "3 min",
+                                },
+                            ]}
+                        />
+                    ) : (
+                        ""
+                    )}
                 </div>
                 <div
                     className={`mobilePlayControls ${
