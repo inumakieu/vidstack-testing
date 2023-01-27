@@ -1,5 +1,9 @@
 import Head from "next/head";
 import { Inter } from "@next/font/google";
+import "vidstack/styles/base.css";
+// the following styles are optional - remove to go headless.
+import "vidstack/styles/ui/buttons.css";
+import "vidstack/styles/ui/sliders.css";
 import styles from "../styles/Home.module.scss";
 import {
     AspectRatio,
@@ -20,10 +24,6 @@ import { CaptionButton } from "../components/caption_button";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { WebVTTParser } from "webvtt-parser";
-import "vidstack/styles/base.css";
-// the following styles are optional - remove to go headless.
-import "vidstack/styles/ui/buttons.css";
-import "vidstack/styles/ui/sliders.css";
 import { ChaptersPanel } from "../components/chapters_panel";
 
 const inter = Inter({ subsets: ["latin"] });

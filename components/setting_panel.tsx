@@ -575,22 +575,22 @@ export function SettingsPanel(props: any) {
                     id: "initial",
                     items: [
                         {
-                            text: "Speed",
-                            iconID: "fillIcon",
+                            html: "<div style='color: white'>Speed</div>",
+                            iconID: "speedIcon",
                             open: "speed",
                         },
                         {
-                            text: "Quality",
+                            html: "<div style='color: white'>Quality</div>",
                             iconID: "qualIcon",
                             open: "quality",
                         },
                         {
-                            text: "Subtitles",
+                            html: "<div style='color: white'>Subtitles</div>",
                             iconID: "sourceIcon",
                             open: "subtitle",
                         },
                         {
-                            text: "Config",
+                            html: "<div style='color: white'>Settings</div>",
                             iconID: "configIcon",
                             open: "config",
                         },
@@ -600,7 +600,7 @@ export function SettingsPanel(props: any) {
                     id: "speed",
                     selectableScene: true,
                     heading: {
-                        html: "Speed",
+                        html: "<div style='color: white'>Speed</div>",
                         open: "speed",
                         hideSubArrow: true,
                     },
@@ -629,13 +629,15 @@ export function SettingsPanel(props: any) {
                     id: "quality",
                     selectableScene: true,
                     heading: {
-                        html: "Quality",
+                        html: "<div style='color: white'>Quality</div>",
                         open: "quality",
                         hideSubArrow: true,
                     },
                     items: props.sources.map((ep: any) => {
                         return {
-                            html: `<div class="qualityItem"><div class="radioItemWrapper"><div class="radioButtonOutside"><div class="radioButtonInside"></div></div>${ep.quality}</div><h4 class="hdText">${
+                            html: `<div class="qualityItem"><div class="radioItemWrapper"><div class="radioButtonOutside"><div class="radioButtonInside"></div></div>${
+                                ep.quality
+                            }</div><h4 class="hdText">${
                                 ep.quality == "1080p"
                                     ? "HD"
                                     : ep.quality == "720p"
