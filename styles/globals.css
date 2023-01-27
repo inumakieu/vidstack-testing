@@ -560,17 +560,24 @@ vds-toggle-button:not([pressed]) .not-pressed {
     align-items: center;
     cursor: pointer;
     transition: 0.3s all ease;
+    width: auto;
+    padding: 0 4px;
+    margin-left: 22px;
 }
 
 .media-caption-button:hover {
-    scale: 1.08;
+    background: rgba(194, 194, 194, 0.4);
+    border-radius: 4px;
 }
 
 .media-next-icon,
 .media-caption-icon {
     width: 24px;
     height: 24px;
-    margin-left: 22px;
+}
+
+.media-caption-icon > svg {
+    scale: 3.0;
 }
 
 .time {
@@ -621,6 +628,10 @@ vds-play-button > svg {
     margin: 0;
     margin-top: 4px;
     font-size: 32px;
+}
+
+.navigateBack {
+    display: none;
 }
 
 .media-skip-icon {
@@ -868,7 +879,6 @@ vds-time-slider[dragging] .slider-thumb-container {
 
 .vidstackLogoWrapper {
     display: flex;
-    width: auto;
     align-items: center;
     height: 40px;
     gap: 4px;
@@ -886,11 +896,16 @@ vds-time-slider[dragging] .slider-thumb-container {
     height: 32px;
 }
 
+.top-bar > .title-wrapper {
+    display: none;
+}
+
 .vidstackTitle {
     font-weight: 400;
     font-size: 18px;
     color: white;
     letter-spacing: 0.4px;
+    width: max-content;
 }
 
 .material-symbols-outlined {
@@ -907,7 +922,14 @@ vds-time-slider[dragging] .slider-thumb-container {
 
 vds-play-button {
     color: white;
-    transition: opacity 0.2s ease-in;
+    transition: 0.2s all ease;
+
+}
+
+vds-play-button:hover, vds-fullscreen-button:hover, vds-mute-button:hover {
+    transform: scale(1.0) !important;
+    background: rgba(194, 194, 194, 0.4);
+    border-radius: 4px;
 }
 
 /* Apply styles when media is paused. */
@@ -1231,8 +1253,13 @@ vds-fullscreen-button {
         transform: translate(-50%, 0%);
         left: 50%;
         top: calc(100vh - var(--height) - 16px);
-        z-index: 101 !important;
+        z-index: 110 !important;
         position: absolute;
+    }
+
+    vds-play-button:hover, vds-fullscreen-button:hover, vds-mute-button:hover {
+        background: none;
+
     }
 }
 
@@ -1244,8 +1271,12 @@ vds-fullscreen-button {
         transform: translate(-50%, 0%);
         left: 50%;
         bottom: 16px;
-        z-index: 101 !important;
+        z-index: 200 !important;
         position: absolute;
+    }
+
+    .sceneCon {
+        z-index: 200 !important;
     }
 
     .vidstackLogoWrapper {
@@ -1269,11 +1300,17 @@ vds-fullscreen-button {
     .mobileControlsAboveProgress {
         display: flex;
         margin-right: 32px;
+        align-items: center;
+        width: calc(100vw - 64px);
     }
 
     .top-bar {
         padding-left: 24px;
         padding-right: 24px;
+    }
+
+    .top-bar.opened > .title-wrapper {
+        display: flex;
     }
 
     .mobilePlayControls {
@@ -1313,6 +1350,7 @@ vds-fullscreen-button {
         justify-content: center;
         align-items: center;
         outline: 1px solid rgba(255, 255, 255, 0.04);
+        z-index: 1;
     }
 
     .mobilePlayWrapper > vds-play-button [slot="play"] {
@@ -1340,10 +1378,15 @@ vds-fullscreen-button {
         font-size: 14px;
     }
 
+    .top-bar.opened > .navigateBack {
+        display: flex;
+    }
+
     .navigateBack {
         padding-top: 4px;
         padding-left: 4px;
         padding-right: 4px;
+        margin-right: 38px;
     }
 
     .navigateBack > svg {
@@ -1363,7 +1406,21 @@ vds-fullscreen-button {
       .top-bar.opened, .mobilePlayControls.opened, .media-overlay.opened > .media-controls > .progressWrapper, .mobileControlsAboveProgress.opened{
           opacity: 1.0;
       }
-  
+
+      vds-play-button:hover, vds-fullscreen-button:hover, vds-mute-button:hover {
+          background: none;
+          z-index: 150;
+          pointer-events: absorb;
+      }
+
+      vds-mute-button {
+        margin-right: auto;
+      }
+
+      .media-caption-icon, .media-caption-button > svg {
+        width: 24px !important;
+        height: 24px !important;
+      }
 
 }
 

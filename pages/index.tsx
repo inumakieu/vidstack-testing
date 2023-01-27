@@ -241,6 +241,8 @@ function MediaPlayerUI(props) {
                         }`}
                     >
                         <h4 className="videoTimeRemaining">{remaining}</h4>
+                                <MuteButton></MuteButton>
+                            <CaptionButton />
                         <FullscreenButton className="fullscreenMobile">
                             <svg
                                 width="12"

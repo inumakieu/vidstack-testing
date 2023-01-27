@@ -362,15 +362,16 @@ export function SettingsPanel(props: any) {
          * Opens the menu
          */
         openMenu() {
-          this.menuCon.style.opacity = "1";
+          this.menuCon.style.bottom = "16px";
+          this.menuCon.style.opacity = "0";
           this.menuCon.style.pointerEvents = "auto";
-
         }
         /**
          * Closes the menu
          */
         closeMenu() {
-            this.menuCon.style.opacity = "0";
+            this.menuCon.style.bottom = "-var(--height)";
+            this.menuCon.style.opacity = "1";
             this.menuCon.style.pointerEvents = "none";
 
         }
@@ -891,7 +892,7 @@ export function SettingsPanel(props: any) {
 
         setDMenu(tempData);
 
-        new settingsPull(document.querySelector(".menuCon"), () => {props.setIsOpen(false)}, true);
+        //new settingsPull(document.querySelector(".menuCon"), () => {props.setIsOpen(false)}, true);
     }, []);
 
     useEffect(() => {
