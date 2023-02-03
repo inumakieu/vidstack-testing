@@ -143,15 +143,15 @@ a {
     width: 300px;
     max-height: 70vh;
     background: rgba(22, 22, 22, 0.9);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     border-radius: 12px;
     transition-duration: 200ms;
     overflow-x: hidden;
     overflow-y: auto;
     padding: 12px 0;
     outline: 1px solid rgba(255, 255, 255, 0.04);
-  }
+}
 
 .menuHeading,
 .menuItem {
@@ -577,7 +577,7 @@ vds-toggle-button:not([pressed]) .not-pressed {
 }
 
 .media-caption-icon > svg {
-    scale: 3.0;
+    scale: 3;
 }
 
 .time {
@@ -892,8 +892,9 @@ vds-time-slider[dragging] .slider-thumb-container {
 }
 
 .vidstackLogo {
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
+    border-radius: 32px;
 }
 
 .top-bar > .title-wrapper {
@@ -923,11 +924,12 @@ vds-time-slider[dragging] .slider-thumb-container {
 vds-play-button {
     color: white;
     transition: 0.2s all ease;
-
 }
 
-vds-play-button:hover, vds-fullscreen-button:hover, vds-mute-button:hover {
-    transform: scale(1.0) !important;
+vds-play-button:hover,
+vds-fullscreen-button:hover,
+vds-mute-button:hover {
+    transform: scale(1) !important;
     background: rgba(194, 194, 194, 0.4);
     border-radius: 4px;
 }
@@ -1076,10 +1078,10 @@ vds-fullscreen-button {
     transition: 0.3s all ease;
     width: 100%;
     --media-slider-height: 48px;
-  --media-slider-thumb-size: 14px;
-  --media-slider-focused-thumb-size: calc(var(--thumb-size) * 1.1);
-  --media-slider-track-height: 4px;
-  --media-slider-focused-track-height: calc(var(--track-height) * 1.25);
+    --media-slider-thumb-size: 14px;
+    --media-slider-focused-thumb-size: calc(var(--thumb-size) * 1.1);
+    --media-slider-track-height: 4px;
+    --media-slider-focused-track-height: calc(var(--track-height) * 1.25);
 }
 
 .mobileControlsAboveProgress {
@@ -1168,17 +1170,18 @@ vds-fullscreen-button {
 
     .mobilePlayControls {
         grid-area: 1/1/1/1;
-        display: none;
+        display: flex;
         align-items: center;
         justify-content: space-evenly;
         width: 100vw;
         aspect-ratio: 16/9;
         transition: 0.3s all ease;
         background: rgba(0, 0, 0, 0.5);
+        opacity: 0.0;
     }
 
     .mobilePlayControls.opened {
-        display: flex;
+        opacity: 1.0;
     }
 
     .mobilePlayWrapper {
@@ -1239,11 +1242,10 @@ vds-fullscreen-button {
         scale: 0.8;
     }
 
-    vds-time-slider [part='thumb'] {
+    vds-time-slider [part="thumb"] {
         opacity: 1 !important;
         z-index: 100 !important;
-      }
-
+    }
 
     /* Settings Menu */
 
@@ -1257,9 +1259,14 @@ vds-fullscreen-button {
         position: absolute;
     }
 
-    vds-play-button:hover, vds-fullscreen-button:hover, vds-mute-button:hover {
+    vds-play-button:hover,
+    vds-fullscreen-button:hover,
+    vds-mute-button:hover {
         background: none;
+    }
 
+    .videoTimeRemaining {
+        margin-right: auto;
     }
 }
 
@@ -1395,33 +1402,41 @@ vds-fullscreen-button {
         height: 18px;
     }
 
-    vds-time-slider [part='thumb'] {
+    vds-time-slider [part="thumb"] {
         opacity: 1 !important;
-      }
-
-      .top-bar, .mobilePlayControls, .progressWrapper, .mobileControlsAboveProgress {
-        opacity: 0.0;
     }
 
-      .top-bar.opened, .mobilePlayControls.opened, .media-overlay.opened > .media-controls > .progressWrapper, .mobileControlsAboveProgress.opened{
-          opacity: 1.0;
-      }
+    .top-bar,
+    .mobilePlayControls,
+    .progressWrapper,
+    .mobileControlsAboveProgress {
+        opacity: 0;
+    }
 
-      vds-play-button:hover, vds-fullscreen-button:hover, vds-mute-button:hover {
-          background: none;
-          z-index: 150;
-          pointer-events: absorb;
-      }
+    .top-bar.opened,
+    .mobilePlayControls.opened,
+    .media-overlay.opened > .media-controls > .progressWrapper,
+    .mobileControlsAboveProgress.opened {
+        opacity: 1;
+    }
 
-      vds-mute-button {
+    vds-play-button:hover,
+    vds-fullscreen-button:hover,
+    vds-mute-button:hover {
+        background: none;
+        z-index: 150;
+        pointer-events: absorb;
+    }
+
+    vds-mute-button {
         margin-right: auto;
-      }
+    }
 
-      .media-caption-icon, .media-caption-button > svg {
+    .media-caption-icon,
+    .media-caption-button > svg {
         width: 24px !important;
         height: 24px !important;
-      }
-
+    }
 }
 
 .chapterWrapper > svg {
@@ -1430,7 +1445,7 @@ vds-fullscreen-button {
 }
 
 .chapterItem {
-    background: rgba(255, 255, 255, 0.0);
+    background: rgba(255, 255, 255, 0);
     border-left: 4px solid rgba(255, 255, 255, 0);
     display: flex;
     height: 52px;
@@ -1446,4 +1461,24 @@ vds-fullscreen-button {
 vds-time-slider {
     margin-left: 12px;
     margin-right: 12px;
+}
+@media only screen and (max-width: 600px) and (display-mode: fullscreen) {
+
+    .mobilePlayControls {
+        height: 100vh;
+        z-index: 200;
+    }
+
+    .progressWrapper {
+        padding: 0 20px;
+        padding-bottom: 40px;
+    }
+
+    .subtitlesWrapper {
+        padding-bottom: calc(100vh / 2 - ((100vw / 16 * 9) / 2) + 20px);
+    }
+
+    .mobileControlsAboveProgress.opened {
+        padding: 0 20px;
+    }
 }

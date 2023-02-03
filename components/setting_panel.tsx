@@ -7,109 +7,6 @@ export function SettingsPanel(props: any) {
     const menuCon = useRef(null);
     const [DMenu, setDMenu] = useState<any>();
 
-    class settingsPull {
-      constructor(dom, callback, shouldCheck = false) {
-        this.dom = dom;
-        this.shouldCheck = shouldCheck;
-        let self = this;
-        this.callback = callback;
-        this.iniX = 0;
-        this.lastX = 0;
-        this.sensitivity = 50;
-        this.iniTop = 0;
-        this.dom.addEventListener("touchstart", function (event) {
-          self.touchStart(event, self);
-        }, { passive: true });
-    
-        this.dom.addEventListener("touchmove", function (event) {
-          self.touchMove(event, self);
-        }, { passive: true });
-    
-        this.dom.addEventListener("touchend", function (event) {
-          self.touchEnd(self);
-        });
-    
-        this.dom.addEventListener("touchcancel", function (event) {
-          self.touchEnd(self);
-        });
-    
-        self.shouldStart = false;
-        self.hasMoved = false;
-        self.settingCon = document.querySelector(".menuCon");
-      }
-    
-      touchStart(event, self) {
-        
-        if(self.shouldCheck){
-          self.scrollCon = self.dom.querySelector(".sceneCon.active");
-        }
-    
-        if (self.shouldCheck && self.scrollCon.scrollTop !== 0) {
-          return;
-        }
-    
-        const targetTouches = event.targetTouches;
-        let x = targetTouches[0].screenY;
-        self.iniX = x;
-        self.shouldStart = true;
-        self.iniTop = self.settingCon.offsetTop;
-        self.settingCon.style.transitionDuration = "0ms";
-    
-      }
-    
-      touchMove(event, self) {
-        
-        if ((self.shouldCheck && self.scrollCon.scrollTop > 0) || self.shouldStart === false) {
-          self.shouldStart = false;
-          return;
-        }
-        
-        const targetTouches = event.targetTouches;
-        let x = targetTouches[0].screenY;
-    
-        let translate = -(-x + self.iniX);
-        if(translate > 0){
-    
-          console.log(`translateY(${-(-x + self.iniX)}px)`, self.settingCon.style.transform);
-          self.settingCon.style.transform = `translateY(${-(-x + self.iniX)}px)`;
-          self.lastX = -x + self.iniX;
-        }
-      }
-    
-      touchEnd(self) {
-        // if(self.hasMoved){
-        // 	self.callback();
-        // }else{
-        // 	self.dom.style.opacity = "1";
-        // 	self.dom.style.transform = `translateX(0px)`;
-        // }
-    
-        console.log(self.shouldStart);
-    
-        if (self.shouldStart === false) {
-          self.settingCon.style.transform = `translateY(0)`;
-          return;
-        }
-    
-        if (self.lastX < -75) {
-          self.callback();
-        } else {
-          self.settingCon.style.transform = `translateY(0)`;
-        }
-    
-        self.settingCon.style.transitionDuration = "200ms";
-    
-    
-        self.iniTop = 0;
-        self.iniX = 0;
-        self.lastX = 0;
-        self.shouldStart = false;
-        self.hasMoved = false;
-    
-    
-      }
-    }
-
     function createElement(config) {
         let temp;
         if ("element" in config) {
@@ -362,18 +259,13 @@ export function SettingsPanel(props: any) {
          * Opens the menu
          */
         openMenu() {
-          this.menuCon.style.bottom = "16px";
-          this.menuCon.style.opacity = "0";
-          this.menuCon.style.pointerEvents = "auto";
+          this.menuCon.style.display = "flex"
         }
         /**
          * Closes the menu
          */
         closeMenu() {
-            this.menuCon.style.bottom = "-var(--height)";
-            this.menuCon.style.opacity = "1";
-            this.menuCon.style.pointerEvents = "none";
-
+            this.menuCon.style.display = "none"
         }
         /**
          *
@@ -891,8 +783,6 @@ export function SettingsPanel(props: any) {
         console.log(tempData);
 
         setDMenu(tempData);
-
-        //new settingsPull(document.querySelector(".menuCon"), () => {props.setIsOpen(false)}, true);
     }, []);
 
     useEffect(() => {

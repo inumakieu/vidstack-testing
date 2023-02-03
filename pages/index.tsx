@@ -6,25 +6,21 @@ import "vidstack/styles/ui/buttons.css";
 import "vidstack/styles/ui/sliders.css";
 import styles from "../styles/Home.module.scss";
 import {
-    AspectRatio,
-    FullscreenButton,
-    HLSVideo,
-    Media,
-    MediaProvider,
-    MuteButton,
-    PlayButton,
-    SliderValueText,
-    TimeSlider,
-    useMediaElement,
-    useMediaState,
-    VolumeSlider,
+    MediaFullscreenButton,
+    MediaOutlet,
+    MediaPlayer,
+    MediaMuteButton,
+    MediaPlayButton,
+    MediaTimeSlider,
+    MediaVolumeSlider,
 } from "@vidstack/react";
 import { SettingsPanel } from "../components/setting_panel";
 import { CaptionButton } from "../components/caption_button";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { WebVTTParser } from "webvtt-parser";
 import { ChaptersPanel } from "../components/chapters_panel";
+import Branding from "../components/branding";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -48,24 +44,14 @@ export default function Home(props) {
                 />
             </Head>
             <div className={styles.container}>
-                <MediaProvider>
-                    <Media className={styles.videoWrapper} view="video">
-                        <AspectRatio
-                            ratio="16/9"
-                            className={styles.videoAspect}
-                        >
-                            <HLSVideo className={styles.videoPlayer}>
-                                <video
-                                    src="https://media-files.vidstack.io/1080p.mp4"
-                                    preload="none"
-                                    data-video="0"
-                                    className={styles.video}
-                                />
-                            </HLSVideo>
-                        </AspectRatio>
-                        <MediaPlayerUI {...props} />
-                    </Media>
-                </MediaProvider>
+                <MediaPlayer
+                    src="https://media-files.vidstack.io/1080p.mp4"
+                    poster="https://media-files.vidstack.io/poster.png"
+                    aspectRatio={16 / 9}
+                >
+                    <MediaOutlet />
+                </MediaPlayer>
+                <MediaPlayerUI {...props} />
             </div>
         </div>
     );
@@ -76,104 +62,96 @@ function MediaPlayerUI(props) {
     const [showChapters, setShowChapters] = useState(false);
     const [showControls, setShowControls] = useState(false);
     const [cues, setCues] = useState([]);
-    const media = useMediaElement();
+    let player;
 
-    // - This is a live subscription to the paused store.
-    // - All stores are lazily subscribed to on prop access.
-    const { currentTime, duration } = useMediaState();
-
-    useEffect(() => {
-        if (!media) return;
-        // ...
-    }, [media]);
+    const subRef = useRef(null);
 
     useEffect(() => {
         setCues(props.tree.cues);
         console.log(props);
+
+        player = document.querySelector("media-player");
+
+        if (player == null) return;
+
+        player.subscribe(({ currentTime, duration }) => {
+            const minutes = Math.floor(currentTime / 60);
+            const seconds = formatSeconds(currentTime);
+            setTime(`${minutes}:${seconds}`);
+
+            const rem = duration - currentTime;
+
+            const rem_minutes = Math.floor(rem / 60);
+            const rem_seconds = formatSeconds(rem);
+            setRemaining(`${rem_minutes}:${rem_seconds}`);
+
+            const subtitleHTML = document.getElementById("subtitles");
+
+            const overlappingCues = cues.filter(
+                (cue) =>
+                    cue.startTime <= currentTime && cue.endTime >= currentTime
+            );
+            console.log(overlappingCues);
+            if (overlappingCues.length > 0) {
+                if (subtitleHTML != null) {
+                    const subText = overlappingCues.reduce(
+                        (acc, cue) => `${acc + cue.text}\n`,
+                        ""
+                    );
+                    updateSubtitles(subText);
+                }
+            } else {
+                if (subtitleHTML != null) {
+                    updateSubtitles();
+                }
+            }
+            const dur_minutes = Math.floor(duration / 60);
+            const dur_seconds = (duration % 60).toFixed(0).padStart(2, "0");
+            setVideoDuration(`${dur_minutes}:${dur_seconds}`);
+        });
     }, []);
 
     const [time, setTime] = useState("00:00");
     const [remaining, setRemaining] = useState("00:00");
     const [videoDuration, setVideoDuration] = useState("00:00");
 
-    useEffect(() => {
-        if (!media) return;
+    function formatSeconds(time: number) {
+        return (time % 60).toFixed(0).padStart(2, "0");
+    }
 
-        const minutes = Math.floor(currentTime / 60);
-        const seconds = (currentTime % 60).toFixed(0).padStart(2, "0");
-        setTime(`${minutes}:${seconds}`);
+    function updateSubtitles(text?: string) {
+        if (subRef == null) return;
 
-        const rem = duration - currentTime;
-
-        const dur_minutes = Math.floor(rem / 60);
-        const dur_seconds = (rem % 60).toFixed(0).padStart(2, "0");
-        setRemaining(`${dur_minutes}:${dur_seconds}`);
-
-        console.log(currentTime);
-
-        const subtitleHTML = document.getElementById("subtitles");
-
-        const overlappingCues = cues.filter(
-            (cue) => cue.startTime <= currentTime && cue.endTime >= currentTime
-        );
-        console.log(overlappingCues);
-        if (overlappingCues.length > 0) {
-            if (subtitleHTML != null) {
-                let subText = "";
-                overlappingCues.forEach((cue) => {
-                    subText += cue.text + "\n";
-                });
-                subtitleHTML.innerHTML = subText.trimEnd();
-                subtitleHTML.style.background = "rgba(0, 0, 0, 0.7)";
-            }
+        if (text) {
+            subRef!.current.innerHTML = text.trimEnd();
+            subRef!.current.style.background = "rgba(0, 0, 0, 0.7)";
         } else {
-            if (subtitleHTML != null) {
-                subtitleHTML.innerHTML = "";
-                subtitleHTML.style.background = "transparent";
-            }
+            subRef!.current.innerHTML = "";
+            subRef!.current.style.background = "transparent";
         }
-    }, [currentTime]);
-
-    useEffect(() => {
-        if (!media) return;
-
-        const dur_minutes = Math.floor(duration / 60);
-        const dur_seconds = (duration % 60).toFixed(0).padStart(2, "0");
-        setVideoDuration(`${dur_minutes}:${dur_seconds}`);
-    }, [duration]);
+    }
 
     return (
         <div>
             <div className={`media-overlay ${showControls ? "opened" : ""}`}>
                 <div className={`top-bar ${showControls ? "opened" : ""}`}>
                     <div className="navigateBack">
-                    <svg width="16" height="16" viewBox="0 0 10 18" fill="white" xmlns="http://www.w3.org/2000/svg">
-<path d="M5.7036 9.08318C5.74916 9.03762 5.74916 8.96375 5.7036 8.91819L0.175798 3.39039C-0.0520075 3.16258 -0.0520077 2.79324 0.175798 2.56543L1.57823 1.163C1.80603 0.935198 2.17538 0.935198 2.40318 1.163L8.40032 7.16014C8.40932 7.1681 8.41813 7.17638 8.42674 7.18499L9.82917 8.58742C10.057 8.81523 10.057 9.18457 9.82917 9.41238L2.40455 16.837C2.17674 17.0648 1.8074 17.0648 1.57959 16.837L0.177163 15.4346C-0.0506432 15.2068 -0.0506436 14.8374 0.177162 14.6096L5.7036 9.08318Z"/>
-</svg>
+                        <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 10 18"
+                            fill="white"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path d="M5.7036 9.08318C5.74916 9.03762 5.74916 8.96375 5.7036 8.91819L0.175798 3.39039C-0.0520075 3.16258 -0.0520077 2.79324 0.175798 2.56543L1.57823 1.163C1.80603 0.935198 2.17538 0.935198 2.40318 1.163L8.40032 7.16014C8.40932 7.1681 8.41813 7.17638 8.42674 7.18499L9.82917 8.58742C10.057 8.81523 10.057 9.18457 9.82917 9.41238L2.40455 16.837C2.17674 17.0648 1.8074 17.0648 1.57959 16.837L0.177163 15.4346C-0.0506432 15.2068 -0.0506436 14.8374 0.177162 14.6096L5.7036 9.08318Z" />
+                        </svg>
                     </div>
-                    <a
-                        target="_blank"
-                        href="https://www.vidstack.io/"
-                        rel="noopener noreferrer"
-                    >
-                        <div className="vidstackLogoWrapper">
-                            <img
-                                className="vidstackLogo"
-                                src="https://media.discordapp.net/attachments/1018251990624641044/1067154803068764170/RLcAMyjL_400x400-removebg-preview.png"
-                                alt=""
-                            />
-                            <h4 className="vidstackTitle">Vidstack Player</h4>
-                            <svg width="16" height="16" viewBox="0 0 10 18" fill="white" xmlns="http://www.w3.org/2000/svg">
-<path d="M5.7036 9.08318C5.74916 9.03762 5.74916 8.96375 5.7036 8.91819L0.175798 3.39039C-0.0520075 3.16258 -0.0520077 2.79324 0.175798 2.56543L1.57823 1.163C1.80603 0.935198 2.17538 0.935198 2.40318 1.163L8.40032 7.16014C8.40932 7.1681 8.41813 7.17638 8.42674 7.18499L9.82917 8.58742C10.057 8.81523 10.057 9.18457 9.82917 9.41238L2.40455 16.837C2.17674 17.0648 1.8074 17.0648 1.57959 16.837L0.177163 15.4346C-0.0506432 15.2068 -0.0506436 14.8374 0.177162 14.6096L5.7036 9.08318Z"/>
-</svg>
-
-                        </div>
-                    </a>
+                    <Branding />
                     <div className="title-wrapper">
-                            <h2 className="video-title">
-                                Video Title : Chapter Name
-                            </h2>
-                        </div>
+                        <h2 className="video-title">
+                            Video Title : Chapter Name
+                        </h2>
+                    </div>
                     <div
                         onClick={() => {
                             setShowChapters(!showChapters);
@@ -195,7 +173,6 @@ function MediaPlayerUI(props) {
                             <path d="M0.796022 15.9481C0.71264 16.2593 0.897313 16.5791 1.2085 16.6625L2.89887 17.1154C3.21006 17.1988 3.52992 17.0141 3.61331 16.703L7.53873 2.05308C7.62211 1.74189 7.43744 1.42203 7.12625 1.33865L5.43588 0.885715C5.12469 0.802332 4.80483 0.987005 4.72144 1.29819L0.796022 15.9481Z" />
                         </svg>
                     </div>
-
                     <div
                         aria-label="Settings"
                         onClick={() => {
@@ -206,7 +183,6 @@ function MediaPlayerUI(props) {
                             open ? "active" : ""
                         }`}
                     >
-
                         <svg
                             className="material-symbols-outlined media-settings-icon"
                             style={{
@@ -241,9 +217,15 @@ function MediaPlayerUI(props) {
                         }`}
                     >
                         <h4 className="videoTimeRemaining">{remaining}</h4>
-                                <MuteButton></MuteButton>
-                            <CaptionButton />
-                        <FullscreenButton className="fullscreenMobile">
+                        <MediaMuteButton></MediaMuteButton>
+                        <CaptionButton />
+                        <MediaFullscreenButton
+                            className="fullscreenMobile"
+                            onClick={() => {
+                                console.log("fullscreen");
+                                screen.orientation.lock("landscape");
+                            }}
+                        >
                             <svg
                                 width="12"
                                 height="12"
@@ -268,26 +250,26 @@ function MediaPlayerUI(props) {
                                     d="M18 7h4v2h-6V3h2v4zM8 9H2V7h4V3h2v6zm10 8v4h-2v-6h6v2h-4zM8 15v6H6v-4H2v-2h6z"
                                 />
                             </svg>
-                        </FullscreenButton>
+                        </MediaFullscreenButton>
                     </div>
                     <div className="progressWrapper">
                         <h4 className="videoTime">{time}</h4>
-                        <TimeSlider
+                        <MediaTimeSlider
                             className={`videoTimeSlider ${
                                 showControls ? "opened" : ""
                             }`}
-                        ></TimeSlider>
+                        ></MediaTimeSlider>
                         <h4 className="videoTime">{videoDuration}</h4>
                     </div>
 
                     <div className="time">
                         <div className="playPauseWrapper">
                             <div className="playWrapper">
-                                <PlayButton></PlayButton>
+                                <MediaPlayButton></MediaPlayButton>
                             </div>
                             <div className="volume-controls">
-                                <MuteButton></MuteButton>
-                                <VolumeSlider></VolumeSlider>
+                                <MediaMuteButton></MediaMuteButton>
+                                <MediaVolumeSlider></MediaVolumeSlider>
                             </div>
                         </div>
                         <div className="title-wrapper">
@@ -296,7 +278,8 @@ function MediaPlayerUI(props) {
                             </h2>
                         </div>
                         <div className="media-controls-buttons">
-                            <FullscreenButton className="fullscreenMobile">
+                            <CaptionButton />
+                            <MediaFullscreenButton className="fullscreenMobile">
                                 <svg
                                     width="12"
                                     height="12"
@@ -321,11 +304,15 @@ function MediaPlayerUI(props) {
                                         d="M18 7h4v2h-6V3h2v4zM8 9H2V7h4V3h2v6zm10 8v4h-2v-6h6v2h-4zM8 15v6H6v-4H2v-2h6z"
                                     />
                                 </svg>
-                            </FullscreenButton>
-                            <CaptionButton />
+                            </MediaFullscreenButton>
                         </div>
                     </div>
-                    <SettingsPanel setIsOpen={setOpen} isOpen={open} sources={[]} subtitles={[]} />
+                    <SettingsPanel
+                        setIsOpen={setOpen}
+                        isOpen={open}
+                        sources={[]}
+                        subtitles={[]}
+                    />
                     {showChapters ? (
                         <ChaptersPanel
                             chapters={[
@@ -374,7 +361,7 @@ function MediaPlayerUI(props) {
                         </svg>
                     </div>
                     <div className="playWrapper mobilePlayWrapper">
-                        <PlayButton></PlayButton>
+                        <MediaPlayButton></MediaPlayButton>
                     </div>
                     <div className="skipWrapper skipBackward">
                         <svg
@@ -395,6 +382,7 @@ function MediaPlayerUI(props) {
                 <p
                     className="subtitle"
                     id="subtitles"
+                    ref={subRef}
                     style={{
                         opacity: cues.length > 0 ? "1.0" : "0.0",
                         transition: "0.3s all ease",

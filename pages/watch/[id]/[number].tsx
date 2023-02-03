@@ -25,6 +25,7 @@ import "vidstack/styles/base.css";
 // the following styles are optional - remove to go headless.
 import "vidstack/styles/ui/buttons.css";
 import "vidstack/styles/ui/sliders.css";
+import Branding from "../../../components/branding";
 
 export default function Home(props) {
     return (
@@ -80,6 +81,7 @@ function MediaPlayerUI(props) {
     const [open, setOpen] = useState(false);
     const [showControls, setShowControls] = useState(false);
     const [cues, setCues] = useState([]);
+    const [hasSubsRightNow, setHasSubsRightNow] = useState(false);
     const media = useMediaElement();
 
     // - This is a live subscription to the paused store.
@@ -102,6 +104,7 @@ function MediaPlayerUI(props) {
 
     useEffect(() => {
         if (!media) return;
+        setHasSubsRightNow(false)
 
         const minutes = Math.floor(currentTime / 60);
         const seconds = (currentTime % 60).toFixed(0).padStart(2, "0");
@@ -129,11 +132,13 @@ function MediaPlayerUI(props) {
                 });
                 subtitleHTML.innerHTML = subText.trimEnd();
                 subtitleHTML.style.background = "rgba(0, 0, 0, 0.7)";
+                setHasSubsRightNow(true)
             }
         } else {
             if (subtitleHTML != null) {
                 subtitleHTML.innerHTML = "";
                 subtitleHTML.style.background = "transparent";
+                setHasSubsRightNow(false)
             }
         }
     }, [currentTime]);
@@ -150,23 +155,7 @@ function MediaPlayerUI(props) {
         <div>
             <div className="media-overlay">
                 <div className="top-bar">
-                    <a
-                        target="_blank"
-                        href="https://www.vidstack.io/"
-                        rel="noopener noreferrer"
-                    >
-                        <div className="vidstackLogoWrapper">
-                            <img
-                                className="vidstackLogo"
-                                src="https://media.discordapp.net/attachments/1018251990624641044/1067154803068764170/RLcAMyjL_400x400-removebg-preview.png"
-                                alt=""
-                            />
-                            <h4 className="vidstackTitle">Vidstack Player</h4>
-                            <span className="material-symbols-outlined">
-                                chevron_right
-                            </span>
-                        </div>
-                    </a>
+                    <Branding title="Testing" />
 
                     <div
                         aria-label="Settings"
@@ -299,7 +288,7 @@ function MediaPlayerUI(props) {
                 </div>
             </div>
             <div className="subtitlesWrapper">
-                <p className="subtitle" id="subtitles" style={{opacity: cues.length != 0 ? "1.0" : "0.0", transition: "0.3s all ease"}}></p>
+                <p className="subtitle" id="subtitles" style={{opacity: hasSubsRightNow ? "1.0" : "0.0", transition: "0.3s all ease"}}></p>
             </div>
         </div>
     );
