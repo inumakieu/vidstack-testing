@@ -401,7 +401,7 @@ a {
         url("../public/Trebuchet-MS-Italic.woff") format("woff");
 }
 
-vds-media {
+media-media {
     display: inline-block;
     width: 100%;
     height: 100%;
@@ -409,7 +409,7 @@ vds-media {
     align-items: center;
 }
 
-vds-gesture {
+media-gesture {
     position: absolute;
     top: 0;
     left: 0;
@@ -531,11 +531,11 @@ vds-gesture {
     z-index: 1;
 }
 
-vds-toggle-button[pressed] .pressed {
+media-toggle-button[pressed] .pressed {
     display: none;
 }
 
-vds-toggle-button:not([pressed]) .not-pressed {
+media-toggle-button:not([pressed]) .not-pressed {
     display: none;
 }
 
@@ -554,13 +554,18 @@ vds-toggle-button:not([pressed]) .not-pressed {
     justify-content: flex-end;
 }
 
+media-toggle-button {
+    min-height: 24px !important;
+    min-width: 24px !important;
+}
+
 .media-caption-button {
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
     transition: 0.3s all ease;
-    width: auto;
+    width: 32px;
     padding: 0 4px;
     margin-left: 22px;
 }
@@ -599,7 +604,7 @@ vds-toggle-button:not([pressed]) .not-pressed {
     padding-right: 0;
 }
 
-vds-play-button {
+media-play-button {
     position: relative;
     width: 20px;
     height: 20px;
@@ -608,7 +613,7 @@ vds-play-button {
     color: white;
 }
 
-vds-play-button > svg {
+media-play-button > svg {
     /** `absolute` so icons are placed on top of each other. */
     position: absolute;
     top: 0;
@@ -638,17 +643,17 @@ vds-play-button > svg {
     opacity: 0.7;
 }
 
-vds-media[paused] .media-pause-icon {
+media-media[paused] .media-pause-icon {
     opacity: 0;
     display: none;
 }
 
-vds-media:not([paused]) .media-play-icon {
+media-media:not([paused]) .media-play-icon {
     opacity: 0;
     display: none;
 }
 
-vds-fullscreen-button {
+media-fullscreen-button {
     position: relative;
     width: 24px;
     height: 24px;
@@ -675,7 +680,7 @@ vds-fullscreen-button {
     --opacity-duration: 200ms;
 
     /* clamp video to left and right of slider. */
-    --left-clamp: max(var(--width-half), var(--vds-pointer-percent));
+    --left-clamp: max(var(--width-half), var(--media-pointer-percent));
     --right-clamp: calc(100% - var(--width-half));
     --left: min(var(--left-clamp), var(--right-clamp));
 
@@ -698,7 +703,7 @@ vds-fullscreen-button {
 }
 
 /* show preview while device pointer is inside slider. */
-vds-time-slider[pointing] .media-preview-container {
+media-time-slider[pointing] .media-preview-container {
     opacity: 1;
     transition: opacity ease-in var(--opacity-duration);
 }
@@ -709,17 +714,17 @@ vds-time-slider[pointing] .media-preview-container {
  * -----------------------------------------------------------
  */
 
-vds-slider-video {
+media-slider-video {
     background-color: #000;
 }
 
 /* Temporarily hide video while loading. */
-vds-slider-video:not([video-can-play]) {
+media-slider-video:not([video-can-play]) {
     opacity: 0 !important;
 }
 
 /* Hide video if it fails to load. */
-vds-slider-video[video-error] {
+media-slider-video[video-error] {
     display: none;
 }
 
@@ -729,7 +734,7 @@ vds-slider-video[video-error] {
  * -----------------------------------------------------------
  */
 
-vds-slider-value-text {
+media-slider-value-text {
     margin-top: 8px;
     font-size: 12px;
     padding: 0 8px;
@@ -737,7 +742,7 @@ vds-slider-value-text {
     background-color: black;
 }
 
-vds-fullscreen-button > svg {
+media-fullscreen-button > svg {
     /** `absolute` so icons are placed on top of each other. */
     position: absolute;
     top: 0;
@@ -748,15 +753,15 @@ vds-fullscreen-button > svg {
     transition: opacity ease 150ms;
 }
 
-vds-media[fullscreen] .media-enter-fs-icon {
+media-media[fullscreen] .media-enter-fs-icon {
     opacity: 0;
 }
 
-vds-media:not([fullscreen]) .media-exit-fs-icon {
+media-media:not([fullscreen]) .media-exit-fs-icon {
     opacity: 0;
 }
 
-vds-mute-button {
+media-mute-button {
     position: relative;
     width: 24px;
     height: 24px;
@@ -765,7 +770,7 @@ vds-mute-button {
     color: white;
 }
 
-vds-mute-button > svg {
+media-mute-button > svg {
     /** `absolute` so icons are placed on top of each other. */
     position: absolute;
     top: 0;
@@ -776,15 +781,15 @@ vds-mute-button > svg {
     transition: opacity ease 150ms;
 }
 
-vds-media:not([muted]) .media-mute-icon {
+media-media:not([muted]) .media-mute-icon {
     opacity: 0;
 }
 
-vds-media[muted] .media-unmute-icon {
+media-media[muted] .media-unmute-icon {
     opacity: 0;
 }
 
-vds-volume-slider {
+media-volume-slider {
     --height: 48px;
     --thumb-width: 24px;
     --track-height: 4px;
@@ -801,11 +806,11 @@ vds-volume-slider {
     transition: 0.2s all ease;
 }
 
-vds-volume-slider:hover {
+media-volume-slider:hover {
     --track-height: 6px;
 }
 
-vds-volume-slider:not(:hover) {
+media-volume-slider:not(:hover) {
     --track-height: 4px;
 }
 
@@ -834,7 +839,7 @@ vds-volume-slider:not(:hover) {
 .volume-track.fill {
     background-color: white;
     transform-origin: left center;
-    transform: translateY(-50%) scaleX(var(--vds-fill-rate));
+    transform: translateY(-50%) scaleX(var(--media-fill-rate));
     will-change: transform;
     z-index: 1; /** above track. */
     border-radius: 200px 0px 0px 200px;
@@ -862,8 +867,8 @@ vds-volume-slider:not(:hover) {
     z-index: 10; /** above track. */
 }
 
-vds-time-slider[dragging] .slider-thumb-container {
-    left: var(--vds-pointer-percent);
+media-time-slider[dragging] .slider-thumb-container {
+    left: var(--media-pointer-percent);
 }
 
 .slider-thumb {
@@ -921,69 +926,69 @@ vds-time-slider[dragging] .slider-thumb-container {
     color: white;
 }
 
-vds-play-button {
+media-play-button {
     color: white;
     transition: 0.2s all ease;
 }
 
-vds-play-button:hover,
-vds-fullscreen-button:hover,
-vds-mute-button:hover {
+media-play-button:hover,
+media-fullscreen-button:hover,
+media-mute-button:hover {
     transform: scale(1) !important;
     background: rgba(194, 194, 194, 0.4);
     border-radius: 4px;
 }
 
 /* Apply styles when media is paused. */
-vds-play-button[paused] [slot="play"],
-vds-play-button:not([paused]) [slot="pause"],
-vds-mute-button[muted] [slot="volume-muted"],
-vds-fullscreen-button[fullscreen] [slot="exit"],
-vds-fullscreen-button:not([fullscreen]) [slot="enter"] {
+media-play-button[paused] [slot="play"],
+media-play-button:not([paused]) [slot="pause"],
+media-mute-button[muted] [slot="volume-muted"],
+media-fullscreen-button[fullscreen] [slot="exit"],
+media-fullscreen-button:not([fullscreen]) [slot="enter"] {
     display: block;
 }
 
 /* Apply styles when media is _not_ paused. */
-vds-play-button:not([paused]) [slot="play"],
-vds-play-button[paused] [slot="pause"],
-vds-mute-button:not([muted]) [slot="volume-muted"],
-vds-fullscreen-button[fullscreen] [slot="enter"],
-vds-fullscreen-button:not([fullscreen]) [slot="exit"] {
+media-play-button:not([paused]) [slot="play"],
+media-play-button[paused] [slot="pause"],
+media-mute-button:not([muted]) [slot="volume-muted"],
+media-fullscreen-button[fullscreen] [slot="enter"],
+media-fullscreen-button:not([fullscreen]) [slot="exit"] {
     display: none;
 }
 
-vds-mute-button {
+media-mute-button {
     color: white;
     transition: opacity 0.2s ease-in;
 }
 
-vds-mute-button[muted] [slot="volume-muted"] {
+media-mute-button[muted] [slot="volume-muted"] {
     display: block;
 }
 
-vds-mute-button:not([muted]) [slot="volume-muted"],
-vds-mute-button[muted] [slot="volume-low"],
-vds-mute-button[muted] [slot="volume-high"] {
+media-mute-button:not([muted]) [slot="volume-muted"],
+media-mute-button[muted] [slot="volume-low"],
+media-mute-button[muted] [slot="volume-high"] {
     display: none;
 }
 /* Apply styles when media volume is low (0% < x < 50%). */
-vds-mute-button[volume-low] [slot="volume-muted"],
-vds-mute-button[volume-low] [slot="volume-high"] {
+media-mute-button[volume-low] [slot="volume-muted"],
+media-mute-button[volume-low] [slot="volume-high"] {
     display: none;
 }
 
-vds-mute-button[volume-low] [slot="volume-low"],
-vds-mute-button[volume-high] [slot="volume-high"] {
+media-mute-button[volume-low] [slot="volume-low"],
+media-mute-button[volume-high] [slot="volume-high"] {
     display: block;
 }
 
 /* Apply styles when media volume is high (≥50%). */
-vds-mute-button[volume-high] [slot="volume-muted"],
-vds-mute-button[volume-high] [slot="volume-low"] {
+media-mute-button[volume-high] [slot="volume-muted"],
+media-mute-button[volume-high] [slot="volume-low"] {
     display: none;
 }
 
-vds-fullscreen-button {
+media-fullscreen-button {
     color: white;
     transition: opacity 0.2s ease-in;
 }
@@ -1062,9 +1067,9 @@ vds-fullscreen-button {
     border-radius: 40px;
 }
 
-vds-play-button,
-vds-mute-button,
-vds-fullscreen-button {
+media-play-button,
+media-mute-button,
+media-fullscreen-button {
     min-width: 32px !important;
     min-height: 32px !important;
 }
@@ -1195,7 +1200,7 @@ vds-fullscreen-button {
         outline: 1px solid rgba(255, 255, 255, 0.04);
     }
 
-    .mobilePlayWrapper > vds-play-button [slot="play"] {
+    .mobilePlayWrapper > media-play-button [slot="play"] {
         width: 38px;
         height: 38px;
     }
@@ -1242,7 +1247,7 @@ vds-fullscreen-button {
         scale: 0.8;
     }
 
-    vds-time-slider [part="thumb"] {
+    media-time-slider [part="thumb"] {
         opacity: 1 !important;
         z-index: 100 !important;
     }
@@ -1259,9 +1264,9 @@ vds-fullscreen-button {
         position: absolute;
     }
 
-    vds-play-button:hover,
-    vds-fullscreen-button:hover,
-    vds-mute-button:hover {
+    media-play-button:hover,
+    media-fullscreen-button:hover,
+    media-mute-button:hover {
         background: none;
     }
 
@@ -1360,7 +1365,7 @@ vds-fullscreen-button {
         z-index: 1;
     }
 
-    .mobilePlayWrapper > vds-play-button [slot="play"] {
+    .mobilePlayWrapper > media-play-button [slot="play"] {
         width: 38px;
         height: 38px;
     }
@@ -1402,7 +1407,7 @@ vds-fullscreen-button {
         height: 18px;
     }
 
-    vds-time-slider [part="thumb"] {
+    media-time-slider [part="thumb"] {
         opacity: 1 !important;
     }
 
@@ -1420,15 +1425,15 @@ vds-fullscreen-button {
         opacity: 1;
     }
 
-    vds-play-button:hover,
-    vds-fullscreen-button:hover,
-    vds-mute-button:hover {
+    media-play-button:hover,
+    media-fullscreen-button:hover,
+    media-mute-button:hover {
         background: none;
         z-index: 150;
         pointer-events: absorb;
     }
 
-    vds-mute-button {
+    media-mute-button {
         margin-right: auto;
     }
 
@@ -1458,7 +1463,7 @@ vds-fullscreen-button {
     border-left: 4px solid white;
 }
 
-vds-time-slider {
+media-time-slider {
     margin-left: 12px;
     margin-right: 12px;
 }

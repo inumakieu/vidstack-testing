@@ -13,6 +13,8 @@ import {
     MediaPlayButton,
     MediaTimeSlider,
     MediaVolumeSlider,
+    useMediaPlayer,
+    MediaSliderValueText,
 } from "@vidstack/react";
 import { SettingsPanel } from "../components/setting_panel";
 import { CaptionButton } from "../components/caption_button";
@@ -48,10 +50,11 @@ export default function Home(props) {
                     src="https://media-files.vidstack.io/1080p.mp4"
                     poster="https://media-files.vidstack.io/poster.png"
                     aspectRatio={16 / 9}
+                    className={styles.videoWrapper}
                 >
                     <MediaOutlet />
+                    <MediaPlayerUI {...props} />
                 </MediaPlayer>
-                <MediaPlayerUI {...props} />
             </div>
         </div>
     );
@@ -62,17 +65,17 @@ function MediaPlayerUI(props) {
     const [showChapters, setShowChapters] = useState(false);
     const [showControls, setShowControls] = useState(false);
     const [cues, setCues] = useState([]);
-    let player;
+    const player = useMediaPlayer();
 
     const subRef = useRef(null);
 
     useEffect(() => {
         setCues(props.tree.cues);
         console.log(props);
+    }, []);
 
-        player = document.querySelector("media-player");
-
-        if (player == null) return;
+    useEffect(() => {
+        if (!player) return;
 
         player.subscribe(({ currentTime, duration }) => {
             const minutes = Math.floor(currentTime / 60);
@@ -109,7 +112,7 @@ function MediaPlayerUI(props) {
             const dur_seconds = (duration % 60).toFixed(0).padStart(2, "0");
             setVideoDuration(`${dur_minutes}:${dur_seconds}`);
         });
-    }, []);
+    }, [player])
 
     const [time, setTime] = useState("00:00");
     const [remaining, setRemaining] = useState("00:00");
@@ -258,7 +261,9 @@ function MediaPlayerUI(props) {
                             className={`videoTimeSlider ${
                                 showControls ? "opened" : ""
                             }`}
-                        ></MediaTimeSlider>
+                        >
+                            <MediaSliderValueText type="pointer" format="time" showHours padHours slot="preview" />
+                        </MediaTimeSlider>
                         <h4 className="videoTime">{videoDuration}</h4>
                     </div>
 
