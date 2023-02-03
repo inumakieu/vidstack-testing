@@ -1,12 +1,11 @@
 import { MediaToggleButton } from "@vidstack/react";
 import { useState } from "react";
 
-export function CaptionButton() {
-    const [captionOpen, setCaptionOpen] = useState(true);
+export function CaptionButton(props) {
 
     return (
         <MediaToggleButton aria-label="Caption"onClick={() => {
-            captionOpen ? setCaptionOpen(false) : setCaptionOpen(true);
+            props.open ? props.setOpen(false) : props.setOpen(true);
         }}
         className="media-caption-button">
       <svg
@@ -17,7 +16,7 @@ export function CaptionButton() {
                 fill="white"
                 xmlns="http://www.w3.org/2000/svg"
                 style={{
-                    display: captionOpen ? "none" : "block",
+                    display: props.open ? "none" : "block",
                     transition: "0.3s all ease",
                 }}
                 slot="on"
@@ -35,7 +34,7 @@ export function CaptionButton() {
                 fill="white"
                 xmlns="http://www.w3.org/2000/svg"
                 style={{
-                    display: captionOpen ? "block" : "none",
+                    display: props.open ? "block" : "none",
                     transition: "0.3s all ease",
                 }}
                 slot="off"

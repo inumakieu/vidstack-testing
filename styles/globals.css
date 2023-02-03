@@ -441,16 +441,25 @@ media-gesture {
 
 .subtitle {
     background: rgba(22, 22, 22, 0.9);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+    border: 0px solid rgba(255, 255, 255, 0.04);
 
     color: white;
     font-family: "Trebuchet MS";
     font-size: 26px;
-    padding: 4px 12px;
     border-radius: 6px;
     text-align: center;
+    padding: 4px 12px;
+    transition: 0.3s all ease;
+    opacity: 0;
+}
+
+.subtitle.shown {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    opacity: 1;
 }
 
 .media-overlay {
@@ -738,8 +747,12 @@ media-slider-value-text {
     margin-top: 8px;
     font-size: 12px;
     padding: 0 8px;
-    color: hsl(0, 0%, 70%);
-    background-color: black;
+    color: white;
+}
+
+media-time-slider [slot='preview'] {
+    background: transparent;
+    color: white;
 }
 
 media-fullscreen-button > svg {
@@ -752,6 +765,21 @@ media-fullscreen-button > svg {
     opacity: 1;
     transition: opacity ease 150ms;
 }
+
+/* Override default styles. */
+media-slider-video {
+    width: 156px;
+    aspect-ratio: 16/9;
+    opacity: 1;
+}
+
+/* Apply styles to the underlying `<video>` element. */
+media-slider-video video {
+  width: 156px;
+  aspect-ratio: 16/9;
+}
+
+
 
 media-media[fullscreen] .media-enter-fs-icon {
     opacity: 0;

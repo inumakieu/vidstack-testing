@@ -15,6 +15,8 @@ import {
     MediaVolumeSlider,
     useMediaPlayer,
     MediaSliderValueText,
+    MediaSliderVideo,
+    MediaTime,
 } from "@vidstack/react";
 import { SettingsPanel } from "../components/setting_panel";
 import { CaptionButton } from "../components/caption_button";
@@ -47,13 +49,13 @@ export default function Home(props) {
             </Head>
             <div className={styles.container}>
                 <MediaPlayer
-                    src="https://media-files.vidstack.io/1080p.mp4"
+                    src="https://cors.consumet.stream/https://c-an-ca5.betterstream.cc:2223/hls-playback/6bad66e945c851b0ce0cda2d993bd6ab0f177e531d132d4b68d66ba95f6fbabf0193efeb286abd5cef6b6344c610b3df96386ca6ae18e01935f9f0d8057b5c93483fb879c1af0abed6ba169aed1df9e1b99d316e30b43bc81b6f43f7b4e0973b5e05b91f6944bc8645231f7f9061f28a688b47fb84088d47c9d1216b77aff3c7c6321fa7fa69c719b2799d45e0dfce10/index-f1-v1-a1.m3u8"
                     poster="https://media-files.vidstack.io/poster.png"
                     aspectRatio={16 / 9}
                     className={styles.videoWrapper}
                 >
                     <MediaOutlet />
-                    <MediaPlayerUI {...props} />
+                    <MediaPlayerUI {...props} videoTitle="Classroom of the Elite" />
                 </MediaPlayer>
             </div>
         </div>
@@ -64,6 +66,7 @@ function MediaPlayerUI(props) {
     const [open, setOpen] = useState(false);
     const [showChapters, setShowChapters] = useState(false);
     const [showControls, setShowControls] = useState(false);
+    const [captionOpen, setCaptionOpen] = useState(true);
     const [cues, setCues] = useState([]);
     const player = useMediaPlayer();
 
@@ -127,10 +130,10 @@ function MediaPlayerUI(props) {
 
         if (text) {
             subRef!.current.innerHTML = text.trimEnd();
-            subRef!.current.style.background = "rgba(0, 0, 0, 0.7)";
+            subRef!.current.classList.add("shown");
         } else {
             subRef!.current.innerHTML = "";
-            subRef!.current.style.background = "transparent";
+            subRef!.current.classList.remove("shown");
         }
     }
 
@@ -152,7 +155,7 @@ function MediaPlayerUI(props) {
                     <Branding />
                     <div className="title-wrapper">
                         <h2 className="video-title">
-                            Video Title : Chapter Name
+                            videoTitle : Chapter Name
                         </h2>
                     </div>
                     <div
@@ -256,15 +259,15 @@ function MediaPlayerUI(props) {
                         </MediaFullscreenButton>
                     </div>
                     <div className="progressWrapper">
-                        <h4 className="videoTime">{time}</h4>
+                        <MediaTime type="current" className="videoTime" />
                         <MediaTimeSlider
                             className={`videoTimeSlider ${
                                 showControls ? "opened" : ""
                             }`}
                         >
-                            <MediaSliderValueText type="pointer" format="time" showHours padHours slot="preview" />
+                            <MediaSliderValueText type="pointer" format="time" slot="preview" />
                         </MediaTimeSlider>
-                        <h4 className="videoTime">{videoDuration}</h4>
+                        <MediaTime type="duration" className="videoTime" />
                     </div>
 
                     <div className="time">
@@ -283,7 +286,7 @@ function MediaPlayerUI(props) {
                             </h2>
                         </div>
                         <div className="media-controls-buttons">
-                            <CaptionButton />
+                            <CaptionButton open={captionOpen} setOpen={setCaptionOpen} />
                             <MediaFullscreenButton className="fullscreenMobile">
                                 <svg
                                     width="12"
@@ -352,7 +355,10 @@ function MediaPlayerUI(props) {
                         showControls ? "opened" : ""
                     }`}
                 >
-                    <div className="skipWrapper skipBackward">
+                    <div className="skipWrapper skipBackward" onClick={() => {
+                        if(!player) return
+                        player.currentTime += 15
+                    }}>
                         <svg
                             width="15"
                             height="18"
@@ -385,13 +391,9 @@ function MediaPlayerUI(props) {
             </div>
             <div className="subtitlesWrapper">
                 <p
-                    className="subtitle"
+                    className={`subtitle`}
                     id="subtitles"
                     ref={subRef}
-                    style={{
-                        opacity: cues.length > 0 ? "1.0" : "0.0",
-                        transition: "0.3s all ease",
-                    }}
                 ></p>
             </div>
         </div>
