@@ -55,7 +55,7 @@ export default function Home(props) {
                     className={styles.videoWrapper}
                 >
                     <MediaOutlet />
-                    <MediaPlayerUI {...props} videoTitle="Classroom of the Elite" />
+                    <MediaPlayerUI {...props} />
                 </MediaPlayer>
             </div>
         </div>
@@ -97,7 +97,6 @@ function MediaPlayerUI(props) {
                 (cue) =>
                     cue.startTime <= currentTime && cue.endTime >= currentTime
             );
-            console.log(overlappingCues);
             if (overlappingCues.length > 0) {
                 if (subtitleHTML != null) {
                     const subText = overlappingCues.reduce(
@@ -128,7 +127,7 @@ function MediaPlayerUI(props) {
     function updateSubtitles(text?: string) {
         if (subRef == null) return;
 
-        if (text) {
+        if (text && captionOpen) {
             subRef!.current.innerHTML = text.trimEnd();
             subRef!.current.classList.add("shown");
         } else {
@@ -391,7 +390,7 @@ function MediaPlayerUI(props) {
             </div>
             <div className="subtitlesWrapper">
                 <p
-                    className={`subtitle`}
+                    className="subtitle"
                     id="subtitles"
                     ref={subRef}
                 ></p>

@@ -1,11 +1,11 @@
 import { MediaToggleButton } from "@vidstack/react";
-import { useState } from "react";
 
 export function CaptionButton(props) {
 
     return (
-        <MediaToggleButton aria-label="Caption"onClick={() => {
-            props.open ? props.setOpen(false) : props.setOpen(true);
+        <MediaToggleButton aria-label="Caption"
+        onClick={() => {
+            props.setOpen((prev) => !prev)
         }}
         className="media-caption-button">
       <svg
