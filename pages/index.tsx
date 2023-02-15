@@ -49,7 +49,7 @@ export default function Home(props) {
             </Head>
             <div className={styles.container}>
                 <MediaPlayer
-                    src="https://cors.consumet.stream/https://c-an-ca5.betterstream.cc:2223/hls-playback/6bad66e945c851b0ce0cda2d993bd6ab0f177e531d132d4b68d66ba95f6fbabf0193efeb286abd5cef6b6344c610b3df96386ca6ae18e01935f9f0d8057b5c93483fb879c1af0abed6ba169aed1df9e1b99d316e30b43bc81b6f43f7b4e0973b5e05b91f6944bc8645231f7f9061f28a688b47fb84088d47c9d1216b77aff3c7c6321fa7fa69c719b2799d45e0dfce10/index-f1-v1-a1.m3u8"
+                    src={props.src}
                     poster="https://media-files.vidstack.io/poster.png"
                     aspectRatio={16 / 9}
                     className={styles.videoWrapper}
@@ -135,6 +135,16 @@ function MediaPlayerUI(props) {
             subRef!.current.classList.remove("shown");
         }
     }
+
+    useEffect(() => {
+        if (subRef == null) return;
+
+        if (captionOpen) {
+            subRef!.current.classList.add("shown");
+        } else {
+            subRef!.current.classList.remove("shown");
+        }
+      }, [captionOpen]);
 
     return (
         <div>
@@ -387,6 +397,11 @@ function MediaPlayerUI(props) {
                         </svg>
                     </div>
                 </div>
+                <div className="skipWrappers">
+                    <div className="introSkipButton">
+                        Skip Opening
+                    </div>
+                </div>
             </div>
             <div className="subtitlesWrapper">
                 <p
@@ -400,6 +415,9 @@ function MediaPlayerUI(props) {
 }
 
 export async function getServerSideProps(context) {
+    const { src } = context.query
+
+
     const parser = new WebVTTParser();
     const webVtt = await axios.get(
         "https://cc.zorores.com/fa/64/fa6423d95507c06d2aad3cffe6bd0ea6/eng-3.vtt"
@@ -411,5 +429,5 @@ export async function getServerSideProps(context) {
     console.log(tree.cues[0]);
 
     // Pass data to the page via props
-    return { props: { tree } };
+    return { props: { tree, src } };
 }
