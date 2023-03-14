@@ -14,8 +14,8 @@ import {
     MediaTimeSlider,
     MediaVolumeSlider,
     useMediaPlayer,
-    MediaSliderValueText,
-    MediaSliderVideo,
+    MediaSliderValue,
+    MediaSliderThumbnail,
     MediaTime,
 } from "@vidstack/react";
 import { SettingsPanel } from "../components/setting_panel";
@@ -49,7 +49,7 @@ export default function Home(props) {
             </Head>
             <div className={styles.container}>
                 <MediaPlayer
-                    src={props.src}
+                    src={"./bsd_s1_e1.mp4"}
                     poster="https://media-files.vidstack.io/poster.png"
                     aspectRatio={16 / 9}
                     className={styles.videoWrapper}
@@ -80,7 +80,9 @@ function MediaPlayerUI(props) {
     useEffect(() => {
         if (!player) return;
 
-        player.subscribe(({ currentTime, duration }) => {
+        player.subscribe(({ currentTime, duration, volume }) => {
+            setVolume(parseInt(100 * volume))
+
             const minutes = Math.floor(currentTime / 60);
             const seconds = formatSeconds(currentTime);
             setTime(`${minutes}:${seconds}`);
@@ -117,6 +119,7 @@ function MediaPlayerUI(props) {
     }, [player])
 
     const [time, setTime] = useState("00:00");
+    const [volume, setVolume] = useState(100);
     const [remaining, setRemaining] = useState("00:00");
     const [videoDuration, setVideoDuration] = useState("00:00");
 
@@ -274,7 +277,13 @@ function MediaPlayerUI(props) {
                                 showControls ? "opened" : ""
                             }`}
                         >
-                            <MediaSliderValueText type="pointer" format="time" slot="preview" />
+                            <div className="previewWrapper">
+                                <MediaSliderThumbnail
+                                    src="https://media-files.vidstack.io/thumbnails.vtt"
+                                    slot="preview"
+                                />
+                                <MediaSliderValue type="pointer" format="time" slot="preview" />
+                            </div>
                         </MediaTimeSlider>
                         <MediaTime type="duration" className="videoTime" />
                     </div>
@@ -287,6 +296,9 @@ function MediaPlayerUI(props) {
                             <div className="volume-controls">
                                 <MediaMuteButton></MediaMuteButton>
                                 <MediaVolumeSlider></MediaVolumeSlider>
+                                <div className="volumePercentageWrapper">
+                                    {volume}%
+                                </div>
                             </div>
                         </div>
                         <div className="title-wrapper">
